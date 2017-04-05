@@ -1,0 +1,11 @@
+[16:20:43][status]class commands.IsNSFW called by hiddendoom45 on G:RandomTests(244847610475577345)
+[16:21:04][status]class commands.IsNSFW called by hiddendoom45 on G:RandomTests(244847610475577345)
+[16:21:07][status]class commands.ImgSearch called by hiddendoom45 on G:RandomTests(244847610475577345)
+[16:21:15][status]class commands.ImgSearch called by hiddendoom45 on G:RandomTests(244847610475577345)
+[16:21:40][status]class commands.kill called by hiddendoom45 on G:RandomTests(244847610475577345)
+[16:21:40][status]Bot Quit
+[03-06 16:21:40][Log]log saved
+[11:52:33][ERROR]net.dv8tion.jda.core.exceptions.PermissionException: Cannot delete a guild that you do not own!
+	atnet.dv8tion.jda.core.entities.impl.GuildImpl.delete(GuildImpl.java:431)
+	atglobal.Main.main(Main.java:27)
+[04-03 11:52:33][Log]log saved
