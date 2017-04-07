@@ -5,13 +5,20 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
-
+/**
+ * Class that records and logs everything
+ * @author Allen
+ *
+ */
 public class Log {
+	public static final String LogSource="FFBEBotLog";
 	private static ArrayList<String> log=new ArrayList<String>();
 	private static boolean setup=false;
 	private static Semaphore lock=new Semaphore(1);
@@ -45,12 +52,60 @@ public class Log {
 			}
 			out.append(new SimpleDateFormat("[MM-dd HH:mm:ss]").format(new Date())+"[Log]log saved");
 			log.clear();
-			lock.release();
 			out.close();
 		}
 		catch(Exception e){
-			e.printStackTrace();
+			Log.logError(e);
 		}
+		finally{
+			lock.release();
+		}
+	}
+	/**
+	 * archives the log file for future reference so that it isn't referenced again 
+	 */
+	public static void archive(){
+		save();
+		log.clear();
+		String name=Log.LogSource+"Final-"+new SimpleDateFormat("[yyyy-MM-dd-HH]").format(new Date());//Name based on time
+		int i=0;
+		while(new File(name).exists()){
+			i++;
+			if(i==0){
+				name=name+i;
+			}
+			else{
+				name=name.subSequence(0, name.length()-1)+""+i;
+			}
+		}
+		try{
+			lock.acquire();
+			new File(Log.LogSource).renameTo(new File(name));
+		}
+		catch(Exception e){
+			logError(e);
+		}
+		finally{
+			lock.release();
+		}
+	}
+	/**
+	 * competely clears and deletes the log
+	 */
+	public static void clear(){
+		log.clear();
+		try {
+			lock.acquire();
+			Files.delete(new File(LogSource).toPath());
+		} catch (InterruptedException | IOException e) {
+			//although log is cleared, this will cause message to be outputted to console and for viewing cause log isn't cleared
+			log("ERROR", "error clearing log");
+			logError(e);
+		}
+		finally{
+			lock.release();
+		}
+		
 	}
 	public static void log(String type, String msg){
 		try{
@@ -64,30 +119,39 @@ public class Log {
 			e.printStackTrace();
 		}
 	}
-	public static void logError(Exception e){
+	public static void logShortError(Exception e,int lines){
 		String s=e.toString();
+		int i=0;
 		for(StackTraceElement er:e.getStackTrace()){
-			s+="\n\tat"+er.toString();
+			if(i==lines){
+				break;
+			}
+			s+="\n\tat "+er.toString();
+			i++;
 		}
 		e.printStackTrace();
 		log("ERROR",s);
-		e.printStackTrace();
 	}
-	public static String getLog(int length){
+	public static void logError(Exception e){
+		logShortError(e,e.getStackTrace().length);
+	}
+	public static String getLog(int length,int start){
 		String out="";
 		try {
 			lock.acquire();
-			for(int i=length<log.size()?log.size()-length:0;i<log.size();i++){
-				out+=log.get(i)+"\n";
+			for(int i=length+start<log.size()?log.size()-length-start:0;i<log.size();i++){
+				if(i<log.size()-start){
+					out+=log.get(i)+"\n";
+				}
 			}
 			lock.release();
-			if(length>log.size()){
-				out=getSavedLog(length-log.size())+out;
+			if(length+start>log.size()){
+				out=getSavedLog((start>log.size()?length:length-(log.size()-start)),(start>log.size()?start-log.size():0))+out;
 			}
 		} catch (InterruptedException e) {}
 		return out;
 	}
-	public static String getSavedLog(int length){
+	public static String getSavedLog(int length,int start){
 		String existing="";
 		try{
 			if(new File(Settings.saveSource).exists()){
@@ -99,8 +163,10 @@ public class Log {
 			}
 			String out="";
 			String[] logs=existing.split("\n");
-			for(int i=logs.length>length?logs.length-length:0;i<logs.length;i++){
-				out+=logs[i]+"\n";
+			for(int i=logs.length>length+start?logs.length-length-start:0;i<logs.length;i++){
+				if(i<logs.length-start){
+					out+=logs[i]+"\n";
+				}
 			}
 			return out;
 		}catch(Exception e){

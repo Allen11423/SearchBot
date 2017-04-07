@@ -52,7 +52,7 @@ public class Search extends CommandGenerics implements Command {
 		}
 		}catch(Exception e){
 			Log.logError(e);
-			Lib.sendMessage(event, "error");
+			Lib.sendMessage(event, "error"+e);
 		}
 
 	}
