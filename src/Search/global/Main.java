@@ -1,29 +1,55 @@
-package global;
+package Search.global;
 
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 import javax.security.auth.login.LoginException;
 
-import commands.*;
-import global.record.Log;
-import global.record.Settings;
+import Search.global.ArgumentParser.ArgContainer;
+import Search.global.record.Log;
+import Search.global.record.Settings;
+import Search.commands.*;
+import Search.commands.override.*;
+import Search.global.BotListener;
+import Search.global.CommandParser;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.entities.Game.GameType;
 import net.dv8tion.jda.core.entities.impl.GameImpl;
+import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 
 public class Main {
 	public static JDA jda;
-	public static final CommandParser parser=new CommandParser();
+	public static CommandParser parser=new CommandParser();
 	public static HashMap<String,Command> commands=new HashMap<String,Command>();
+
+	public static final HashMap<String,OverrideCommand> overrides=new HashMap<String,OverrideCommand>();
 	public static void main(String[] args){
 		try{
 			Main.startup();
 			Main.setup();
+			
+			StringBuffer output = new StringBuffer();
+			Process p;
+			try {
+				p = Runtime.getRuntime().exec("java -jar FFBEBot.jar");
+				p.waitFor();
+				BufferedReader reader =
+	                            new BufferedReader(new InputStreamReader(p.getInputStream()));
+
+	                        String line = "";
+				while ((line = reader.readLine())!= null) {
+					output.append(line + "\n");
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}catch(Exception e){
 			Log.logError(e);
 			Log.save();
@@ -32,6 +58,7 @@ public class Main {
 	public static void startup() throws LoginException, IllegalArgumentException, InterruptedException{
 		try{
 		jda = new JDABuilder(AccountType.BOT).addListener(new BotListener()).setToken(Settings.token).buildBlocking();
+		//global.Main.main(null);
 		}catch(LoginException e){
 			TimeUnit.MINUTES.sleep(5);
 			Log.log("System", "error on login, retrying in 5 minutes");
@@ -65,6 +92,7 @@ public class Main {
 		commands.put("nsfw", new IsNSFW());
 		commands.put("announce", new announce());
 		commands.put("announcement", new announcement());
+		overrides.put("log", new ViewLog());
 		//setup/build various things
 		Log.setup();
 		jda.getPresence().setGame(new GameImpl(".serach|.image","null",GameType.DEFAULT));
@@ -85,5 +113,20 @@ public class Main {
 	}
 	public static void log(String type,String msg){
 		Log.log(type, msg);
+	}
+	public static boolean handleOverride(ArgContainer args,MessageReceivedEvent event){
+		if(overrides.containsKey(args.command)){
+			if(args.args.containsKey("help")){
+				overrides.get(args.command).help(event);
+				return true;
+			}
+			boolean safe=overrides.get(args.command).called(args.args, event);
+			if(safe){
+				overrides.get(args.command).action(args.args, event);
+			}
+			overrides.get(args.command).executed(safe, event);
+			return true;
+		}
+		return false;
 	}
 }

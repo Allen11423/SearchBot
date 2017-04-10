@@ -1,10 +1,10 @@
-package commands;
+package Search.commands;
 
 import java.util.concurrent.TimeUnit;
 
-import global.record.Settings;
+import Search.global.record.Settings;
+import Search.util.Lib;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
-import util.Lib;
 
 public class announcement extends CommandGenerics{
 

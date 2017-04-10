@@ -1,4 +1,4 @@
-package commands;
+package Search.commands;
 
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 

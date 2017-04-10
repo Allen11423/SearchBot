@@ -1,12 +1,14 @@
-package global;
+package Search.global;
 
 import java.util.ArrayList;
 
-import global.record.Settings;
+import Search.global.record.Settings;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 
 public class CommandParser {
+	public CommandParser(){
+	}
 	public CommandContainer parse(String rw,MessageReceivedEvent e){
 		ArrayList<String> split=new ArrayList<String>();
 		String raw= rw;

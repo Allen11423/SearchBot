@@ -1,7 +1,7 @@
-package commands;
+package Search.commands;
 
+import Search.util.Lib;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
-import util.Lib;
 
 public class IsNSFW extends CommandGenerics implements Command {
 

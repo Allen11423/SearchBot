@@ -1,9 +1,9 @@
-package commands.override;
+package Search.commands.override;
 
 import java.util.HashMap;
 
-import global.record.Log;
-import util.Lib;
+import Search.global.record.Log;
+import Search.util.Lib;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 public class ViewLog implements OverrideCommand{

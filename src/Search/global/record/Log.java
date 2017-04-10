@@ -1,4 +1,4 @@
-package global.record;
+package Search.global.record;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
+
+import Search.global.record.Log;
+import Search.global.record.Settings;
 /**
  * Class that records and logs everything
  * @author Allen

@@ -1,6 +1,6 @@
-package commands;
+package Search.commands;
 
-import global.Main;
+import Search.global.Main;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 public class kill extends CommandGenerics implements Command{

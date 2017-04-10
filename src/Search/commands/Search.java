@@ -1,4 +1,4 @@
-package commands;
+package Search.commands;
 
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -7,9 +7,9 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import global.record.Log;
+import Search.global.record.Log;
+import Search.util.Lib;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
-import util.Lib;
 
 public class Search extends CommandGenerics implements Command {
 

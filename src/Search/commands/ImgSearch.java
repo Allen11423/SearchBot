@@ -1,4 +1,4 @@
-package commands;
+package Search.commands;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -12,9 +12,9 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import global.record.Log;
+import Search.global.record.Log;
+import Search.util.Lib;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
-import util.Lib;
 
 public class ImgSearch extends CommandGenerics implements Command {
 
@@ -40,7 +40,6 @@ public class ImgSearch extends CommandGenerics implements Command {
 		String userAgent = "ExampleBot 1.0 (+http://example.com/bot)"; // Change this to your company's name and bot homepage!
 		System.out.println(Jsoup.connect(google + URLEncoder.encode(search, charset)+param).followRedirects(true).userAgent(userAgent).timeout(200000).get());
 		Elements links = Jsoup.connect(google + URLEncoder.encode(search, charset)+param).followRedirects(true).userAgent(userAgent).timeout(200000).get().select("#ires td a img");
-		System.out.println(links);
 		for (Element link : links) {
 		  //  String title = link.text();
 		    String url = link.absUrl("src"); // Google returns URLs in format "http://www.google.com/url?q=<url>&sa=U&ei=<someKey>".

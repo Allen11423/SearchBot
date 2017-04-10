@@ -1,6 +1,6 @@
-package commands;
+package Search.commands;
 
-import global.record.Log;
+import Search.global.record.Log;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 /**
