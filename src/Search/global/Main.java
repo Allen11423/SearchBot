@@ -1,8 +1,6 @@
 package Search.global;
 
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
@@ -33,23 +31,8 @@ public class Main {
 		try{
 			Main.startup();
 			Main.setup();
+			//global.Main.main(null);
 			
-			StringBuffer output = new StringBuffer();
-			Process p;
-			try {
-				p = Runtime.getRuntime().exec("java -jar FFBEBot.jar");
-				p.waitFor();
-				BufferedReader reader =
-	                            new BufferedReader(new InputStreamReader(p.getInputStream()));
-
-	                        String line = "";
-				while ((line = reader.readLine())!= null) {
-					output.append(line + "\n");
-				}
-
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
 		}catch(Exception e){
 			Log.logError(e);
 			Log.save();
@@ -58,7 +41,6 @@ public class Main {
 	public static void startup() throws LoginException, IllegalArgumentException, InterruptedException{
 		try{
 		jda = new JDABuilder(AccountType.BOT).addListener(new BotListener()).setToken(Settings.token).buildBlocking();
-		//global.Main.main(null);
 		}catch(LoginException e){
 			TimeUnit.MINUTES.sleep(5);
 			Log.log("System", "error on login, retrying in 5 minutes");

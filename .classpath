@@ -14,5 +14,7 @@
 	<classpathentry kind="lib" path="/Users/Allen/Documents/eclipse_resources/sheets/google-api-services-sheets-v4-rev463-1.22.0.jar" sourcepath="/Users/Allen/Documents/eclipse_resources/sheets/google-api-services-sheets-v4-rev463-1.22.0-sources.jar"/>
 	<classpathentry kind="lib" path="/Users/Allen/Documents/eclipse_resources/sheets/libs/google-oauth-client-jetty-1.22.0.jar" sourcepath="/Users/Allen/Documents/eclipse_resources/sheets/libs/google-oauth-client-jetty-1.22.0.jar"/>
 	<classpathentry kind="lib" path="/Users/Allen/Documents/eclipse_resources/sheets/libs/google-api-client-1.22.0.jar" sourcepath="/Users/Allen/Documents/eclipse_resources/sheets/libs-sources/google-api-client-1.22.0-sources.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/FFBEBot"/>
+	<classpathentry kind="lib" path="/Users/Allen/Documents/eclipse_resources/gson-2.6.2.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
