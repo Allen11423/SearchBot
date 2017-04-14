@@ -9,3 +9,51 @@
 	atnet.dv8tion.jda.core.entities.impl.GuildImpl.delete(GuildImpl.java:431)
 	atglobal.Main.main(Main.java:27)
 [04-03 11:52:33][Log]log saved
+[09:02:39][status]class Search.commands.announce called by hiddendoom45 on G:RandomTests(244847610475577345)
+[09:02:39][ERROR]net.dv8tion.jda.core.exceptions.PermissionException: Cannot preform action due to a lack of Permission. Missing permission: MESSAGE_MANAGE
+	at net.dv8tion.jda.core.entities.impl.MessageImpl.deleteMessage(MessageImpl.java:464)
+	at Search.commands.announce.action(announce.java:24)
+	at Search.global.Main.handleCommand(Main.java:87)
+	at Search.global.BotListener.onMessageReceived(BotListener.java:18)
+	at net.dv8tion.jda.core.hooks.ListenerAdapter.onEvent(ListenerAdapter.java:319)
+	at net.dv8tion.jda.core.hooks.InterfacedEventManager.handle(InterfacedEventManager.java:64)
+	at net.dv8tion.jda.core.handle.MessageCreateHandler.handleDefaultMessage(MessageCreateHandler.java:125)
+	at net.dv8tion.jda.core.handle.MessageCreateHandler.handleInternally(MessageCreateHandler.java:47)
+	at net.dv8tion.jda.core.handle.SocketHandler.handle(SocketHandler.java:38)
+	at net.dv8tion.jda.core.requests.WebSocketClient.handleEvent(WebSocketClient.java:688)
+	at net.dv8tion.jda.core.requests.WebSocketClient.onTextMessage(WebSocketClient.java:437)
+	at com.neovisionaries.ws.client.ListenerManager.callOnTextMessage(ListenerManager.java:352)
+	at com.neovisionaries.ws.client.ReadingThread.callOnTextMessage(ReadingThread.java:262)
+	at com.neovisionaries.ws.client.ReadingThread.callOnTextMessage(ReadingThread.java:240)
+	at com.neovisionaries.ws.client.ReadingThread.handleTextFrame(ReadingThread.java:965)
+	at com.neovisionaries.ws.client.ReadingThread.handleFrame(ReadingThread.java:748)
+	at com.neovisionaries.ws.client.ReadingThread.main(ReadingThread.java:110)
+	at com.neovisionaries.ws.client.ReadingThread.run(ReadingThread.java:66)
+[04-11 10:06:02][Log]log saved
+[13:11:40][ERROR]java.lang.NullPointerException
+	at global.record.SaveSystem.setup(SaveSystem.java:47)
+	at Search.global.Main.setup(Main.java:89)
+	at Search.global.Main.main(Main.java:39)
+[04-11 13:11:40][Log]log saved
+[13:12:21][ERROR]java.lang.NullPointerException
+	at global.record.SaveSystem.setup(SaveSystem.java:47)
+	at Search.global.Main.setup(Main.java:89)
+	at Search.global.Main.main(Main.java:39)
+[04-11 13:12:21][Log]log saved
+[13:12:59][ERROR]java.lang.NullPointerException
+	at global.record.SaveSystem.setup(SaveSystem.java:47)
+	at Search.global.Main.setup(Main.java:89)
+	at Search.global.Main.main(Main.java:39)
+[04-11 13:12:59][Log]log saved
+[13:15:22][ERROR]java.lang.NullPointerException
+	at Search.global.record.Settings.parseToElements(Settings.java:77)
+	at Search.global.record.SaveSystem.setup(SaveSystem.java:35)
+	at Search.global.Main.setup(Main.java:89)
+	at Search.global.Main.main(Main.java:39)
+[04-11 13:15:22][Log]log saved
+[13:23:06][ERROR]java.lang.NullPointerException
+	at Search.global.record.Settings.parseToElements(Settings.java:77)
+	at Search.global.record.SaveSystem.setup(SaveSystem.java:35)
+	at Search.global.Main.setup(Main.java:89)
+	at Search.global.Main.main(Main.java:39)
+[04-11 13:23:06][Log]log saved

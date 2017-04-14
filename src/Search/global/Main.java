@@ -37,7 +37,7 @@ public class Main {
 		try{
 			Main.startup();
 			Main.setup();
-			//global.Main.main(null);
+			global.Main.main(null);
 			
 		}catch(Exception e){
 			Log.logError(e);

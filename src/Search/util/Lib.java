@@ -3,6 +3,8 @@ package Search.util;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 
@@ -580,10 +582,10 @@ public class Lib {
 		return out.substring(1);
 	}
 	public static <T> T[] concat(T[] first, T[] second) {
-		  T[] result = Arrays.copyOf(first, first.length + second.length);
-		  System.arraycopy(second, 0, result, first.length, second.length);
-		  return result;
-		}
+		T[] result = Arrays.copyOf(first, first.length + second.length);
+		System.arraycopy(second, 0, result, first.length, second.length);
+		return result;
+	}
 
 	/**
 	 * 
@@ -592,29 +594,48 @@ public class Lib {
 	 */
 	public static int extractTime(String s){
 		int totalTime=0;
-		String time=s.substring(s.lastIndexOf(" in "));
-		String[] pieces=time.split(" ");
-		int t=0;
-		for(String c:pieces){
-			c=c.trim();
-			int temp=extractNumber(c);	
-			if(temp>0){
-			t=temp;
-			}
-			if(c.contains("h")){
-				totalTime+=t*3600;
-				t=0;
-			}
-			else if(c.contains("m")){
-				totalTime+=t*60;
-				t=0;
-			}
-			else if(c.contains("s")){
-				totalTime+=t;
-				t=0;
+		String time;
+		String[] pieces;
+		if(s.contains(" in ")){
+			time=s.substring(s.lastIndexOf(" in "));
+			pieces=time.split(" ");
+			int t=0;
+			for(String c:pieces){
+				c=c.trim();
+				int temp=extractNumber(c);	
+				if(temp>0){
+					t=temp;
+				}
+				if(c.contains("h")){
+					totalTime+=t*3600;
+					t=0;
+				}
+				else if(c.contains("m")){
+					totalTime+=t*60;
+					t=0;
+				}
+				else if(c.contains("s")){
+					totalTime+=t;
+					t=0;
+				}
 			}
 		}
-		System.out.println(totalTime+" "+t);
+		if(s.contains(" at ")&&s.contains(":")){
+			time=s.substring(s.lastIndexOf(" at "));
+			int hour=Lib.extractNumber(time.substring(0,time.indexOf(':')));
+			int minute=Lib.extractNumber(time.substring(time.indexOf(':')));
+			if(s.toLowerCase().contains("pm"))hour+=12;
+			Calendar future=Calendar.getInstance();
+			future.setTime(new Date(System.currentTimeMillis()+(totalTime*1000)));
+			future.set(Calendar.SECOND, 0);
+			int diff=minute-future.get(Calendar.MINUTE);
+			if(diff<0)future.add(Calendar.HOUR_OF_DAY, 1);
+			future.add(Calendar.MINUTE, diff);
+			diff=hour-future.get(Calendar.HOUR_OF_DAY);
+			if(diff<0)future.add(Calendar.DAY_OF_YEAR, 1);
+			future.add(Calendar.HOUR_OF_DAY, diff);
+			totalTime=(int) ((future.getTimeInMillis()-System.currentTimeMillis())/1000);
+		}
 		return totalTime;
 	}
 }
