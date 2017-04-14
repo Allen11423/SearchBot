@@ -68,8 +68,6 @@ public class ImgSearch extends CommandGenerics implements Command {
 			Log.logError(e);
 			Lib.sendMessage(event, "error");
 		}
-		System.out.println("number of results: " + resultUrls.size());
-
 	}
 
 	public void help(MessageReceivedEvent event) {

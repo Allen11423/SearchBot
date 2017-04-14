@@ -4,9 +4,10 @@ import java.util.concurrent.TimeUnit;
 
 import Search.global.record.Settings;
 import Search.util.Lib;
+import Search.commands.Command;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
-public class announce extends CommandGenerics{
+public class announce extends CommandGenerics implements Command{
 
 	@Override
 	public void action(String[] args, MessageReceivedEvent event) {
@@ -20,8 +21,8 @@ public class announce extends CommandGenerics{
 		int hours=delay/3600;
 		int min=delay/60%60;
 		int sec=delay%60;
-		Lib.sendMessage(eEvent, "sending message to those here in "+(hours>0?hours+" hours ":"")+(min>0?min+" minutes ":"")+(sec>0?sec+" secounds":""));
-		
+		Lib.sendTempMessage(eEvent, "sending message to those here in "+(hours>0?hours+" hours ":"")+(min>0?min+" minutes ":"")+(sec>0?sec+" secounds":""),60);
+		event.getMessage().deleteMessage().complete();
 	}
 
 	@Override

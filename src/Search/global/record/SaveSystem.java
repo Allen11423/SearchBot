@@ -6,9 +6,15 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
+import Search.global.Main;
 import Search.global.record.Log;
 import Search.global.record.Settings;
+import XML.Attribute;
+import XML.Elements;
+import XML.XMLStAXFile;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.events.guild.member.GuildMemberJoinEvent;
@@ -19,6 +25,106 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
  *
  */
 public class SaveSystem {
+	/**
+	 * loads basic data
+	 */
+	public static void setup(){
+		if(!new File(Settings.dataSource).exists()){
+			List<Guild> guilds=Main.jda.getGuilds();
+			Elements root=new Elements("SearchBot");
+			for(Guild g:guilds){
+				root.add(new Settings(g.getId()).parseToElements());
+			}
+			XMLStAXFile file=new XMLStAXFile(new File(Settings.dataSource));
+			file.writeXMLFile();
+			file.startWriter();
+			file.writeElement(root);
+			file.endWriter();
+		}
+		load();
+	}
+	/**
+	 * Loads saved data from file
+	 */
+	public static void load(){
+		Settings.guilds.clear();
+		XMLStAXFile file=new XMLStAXFile(new File(Settings.dataSource));
+		file.readXMLFile();
+		try{
+		ArrayList<Elements> guilds=file.parseToElements("guild");
+		for(Elements e:guilds){
+			try{
+			Settings.guilds.put(e.getAttribute("id").getValue(), new Settings(e));
+			}catch(Exception e1){
+				Log.log("ERROR", "error putting guild(likely missing id attribute)"+e);
+				Log.logError(e1);
+			}
+		}
+		}catch(Exception e){
+			Log.log("ERROR", "error loading guilds");
+		}
+	}
+	/**
+	 * Loads guild info from file
+	 */
+	public static void loadGuilds(){
+		Settings.guilds.clear();
+		XMLStAXFile file=new XMLStAXFile(new File(Settings.dataSource));
+		file.readXMLFile();
+		try{
+		ArrayList<Elements> guilds=file.parseToElements("guild");
+		for(Elements e:guilds){
+			try{
+			Settings.guilds.put(e.getAttribute("id").getValue(), new Settings(e));
+			}catch(Exception e1){
+				Log.log("ERROR", "error putting guild(likely missing id attribute)"+e);
+				Log.logError(e1);
+			}
+		}
+		}catch(Exception e){
+			Log.log("ERROR", "error loading guilds");
+		}
+		file.endReader();
+	}
+	public static Settings getGuild(String id){
+		try{
+		XMLStAXFile file=new XMLStAXFile(new File(Settings.dataSource));
+		file.readXMLFile();
+		Elements guild=file.parseToElements(new Attribute("id",id)).get(0);
+		file.endReader();
+		return new Settings(guild);
+		}
+		catch(Exception e){
+			return new Settings(id);
+		}
+	}
+	public static String getSetting(String id,String tag){
+		XMLStAXFile file=new XMLStAXFile(new File(Settings.dataSource));
+		file.readXMLFile();
+		Elements guild=file.parseToElements(new Attribute("id",id)).get(0);
+		String s= guild.getChilds(tag).get(0).getText();
+		file.endReader();
+		return s;
+	}
+	public static void setSetting(Settings guild){
+		XMLStAXFile file=new XMLStAXFile(new File(Settings.dataSource));
+		file.readXMLFile();
+		Elements doc=file.parseDocToElements();
+		file.endReader();
+		for(int i=0;i<doc.getChilds().size();i++){
+			if(doc.getChilds().get(i).getTagName().equals("guild")){
+				if(doc.getChilds().get(i).getAttribute("id").getValue().equals(guild.id)){
+					doc.getChilds().remove(i);
+					i--;//decrement due to something being removed
+				}
+			}
+		}
+		doc.getChilds().add(guild.parseToElements());
+		file.writeXMLFile();
+		file.startWriter();
+		file.writeElement(doc);
+		file.endWriter();
+	}
 	public static String getJoin(GuildMemberJoinEvent event){
 		return getJoin(event.getGuild());
 	}
