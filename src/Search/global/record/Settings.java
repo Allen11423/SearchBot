@@ -19,7 +19,7 @@ import Search.util.Lib;
 public class Settings {
 	public static final String token=Secrets.testToken;
 	public static final String prefix=".";
-	public static final String modPrefix="~!";
+	public static final String modPrefix=".!";
 	public static final String UA="Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36";
 	public static final String saveSource="SearchBotLog";//for the log
 	public static final String dataSource="SearchBotData";//for the guild based data

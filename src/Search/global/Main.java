@@ -25,7 +25,7 @@ import net.dv8tion.jda.core.entities.Game.GameType;
 import net.dv8tion.jda.core.entities.impl.GameImpl;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
-import util.Lib;
+import Search.util.Lib;
 
 public class Main {
 	public static JDA jda;
@@ -37,7 +37,7 @@ public class Main {
 		try{
 			Main.startup();
 			Main.setup();
-			global.Main.main(null);
+			//global.Main.main(null);
 			
 		}catch(Exception e){
 			Log.logError(e);
@@ -91,6 +91,7 @@ public class Main {
 	}
 	public static void handleCommand(CommandParser.CommandContainer cmd){
 		System.out.println(cmd.invoke);
+		System.out.println(cmd.isModCmd);
 		if(commands.containsKey(cmd.invoke)&&!cmd.isModCmd){
 			boolean safe=commands.get(cmd.invoke).called(cmd.args, cmd.e);
 			if(safe){

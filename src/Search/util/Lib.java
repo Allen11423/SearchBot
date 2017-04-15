@@ -18,6 +18,7 @@ import Search.global.record.Settings;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.MessageEmbed;
 import net.dv8tion.jda.core.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 /**
@@ -69,12 +70,16 @@ public class Lib {
 	public static Message editMessage(Message message,String msg){
 		return message.editMessage(msg).complete();
 	}
+	public static Message sendEmbed(MessageReceivedEvent event, MessageEmbed embed){
+		return event.getChannel().sendMessage(embed).complete();
+	}
 	public static Message sendFile(MessageReceivedEvent event, String msg, File file){
 		try {
-			if(msg.equals("null")){
-				msg="";
+			Message build=null;
+			if(!msg.equals("null")){
+				build=new MessageBuilder().append(msg).build();
 			}
-			return event.getChannel().sendFile(file, new MessageBuilder().append(msg).build()).complete();
+			return event.getChannel().sendFile(file, build).complete();
 		} catch (IOException e) {
 			Log.logError(e);
 		}

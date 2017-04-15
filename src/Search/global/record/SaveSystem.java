@@ -198,7 +198,7 @@ public class SaveSystem {
 		} catch (IOException e) {
 			Log.logError(e);
 		}
-		input=input.substring(0, input.length()-1);
+		if(input.length()>0)input=input.substring(0, input.length()-1);
 		String[] overrides=input.split(",");
 		return overrides;
 	}

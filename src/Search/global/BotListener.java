@@ -26,10 +26,10 @@ public class BotListener extends ListenerAdapter{
 			//base commands that are for prefixes
 			else if(event.getMessage().isMentioned(event.getJDA().getSelfUser())&&!event.getMessage().mentionsEveryone()){
 				if(event.getMessage().getContent().toLowerCase().contains("modprefix")){
-					util.Lib.sendMessage(event, "mod prefix for server:"+SaveSystem.getModPrefix(event));
+					Search.util.Lib.sendMessage(event, "mod prefix for server:"+SaveSystem.getModPrefix(event));
 				}
 				else if(event.getMessage().getContent().toLowerCase().contains("prefix")){
-					util.Lib.sendMessage(event, "prefix for server:"+SaveSystem.getPrefix(event));
+					Search.util.Lib.sendMessage(event, "prefix for server:"+SaveSystem.getPrefix(event));
 				}
 			}
 		}catch(Exception e){
