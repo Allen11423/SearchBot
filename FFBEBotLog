@@ -1,9 +1,0 @@
-[14:47:42][ERROR]net.dv8tion.jda.core.exceptions.AccountTypeException: Attempted to login as a CLIENT with a BOT token!
-	atnet.dv8tion.jda.core.entities.impl.JDAImpl.verifyToken(JDAImpl.java:244)
-	atnet.dv8tion.jda.core.entities.impl.JDAImpl.verifyToken(JDAImpl.java:228)
-	atnet.dv8tion.jda.core.entities.impl.JDAImpl.login(JDAImpl.java:113)
-	atnet.dv8tion.jda.core.JDABuilder.buildAsync(JDABuilder.java:367)
-	atnet.dv8tion.jda.core.JDABuilder.buildBlocking(JDABuilder.java:390)
-	atglobal.Main.startup(Main.java:34)
-	atglobal.Main.main(Main.java:25)
-[02-16 14:47:43][Log]log saved
