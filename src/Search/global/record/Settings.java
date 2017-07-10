@@ -3,12 +3,15 @@ package Search.global.record;
 import java.util.HashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import Search.global.record.Secrets;
 import Search.global.record.Settings;
 import XML.Attribute;
 import XML.Elements;
+import global.Main;
 import Search.util.ModuleController;
+import Search.util.Reminder;
 import Search.util.Lib;
 
 
@@ -42,6 +45,7 @@ public class Settings {
 	public String[] modded=new String[]{};
 	public boolean tJoinMsg=true;
 	public boolean tJoinPM=false;
+	public HashMap<Long,Reminder> reminders=new HashMap<Long,Reminder>();
 	public HashMap<String,ModuleController> disabled=new HashMap<String,ModuleController>();//hashmap of disabled modules module/module controller
 	//in preparation for custom messages for each server
 	public Settings(String id){
@@ -57,6 +61,16 @@ public class Settings {
 		tJoinPM=Lib.getBooleanSetting(false,root,"tJoinPM");
 		for(Elements e:Lib.elementArray(root, "moduleControl")){
 			disabled.put(e.getAttribute("name").getValue(), new ModuleController(e));
+		}
+		for(Elements e:Lib.elementArray(root, "reminder")){
+			Reminder r=new Reminder(e);
+			reminders.put(Long.parseLong(e.getAttribute("ID").getValue()), r);
+			executor.schedule(new Runnable(){//autoexecute
+				public void run(){
+					Main.jda.getGuildById(id).getTextChannelById(r.getChannelID()).sendMessage(r.getMsg());
+					reminders.remove(r);
+				}
+			}, r.getTime()-System.currentTimeMillis(), TimeUnit.MILLISECONDS);
 		}
 	}
 	public Elements parseToElements(){
@@ -85,6 +99,9 @@ public class Settings {
 		}
 		for(String s:this.disabled.keySet()){
 			root.add(this.disabled.get(s).parseToElements());
+		}
+		for(Long l:this.reminders.keySet()){
+			root.add(this.reminders.get(l).toElements());
 		}
 		Elements toggle=new Elements("toggle");
 		root.add(toggle);
