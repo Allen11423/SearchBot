@@ -37,7 +37,7 @@ public class Main {
 		try{
 			Main.startup();
 			Main.setup();
-			//global.Main.main(null);
+			global.Main.main(null);
 			
 		}catch(Exception e){
 			Log.logError(e);
@@ -79,6 +79,8 @@ public class Main {
 		commands.put("nsfw", new IsNSFW());
 		commands.put("announce", new announce());
 		commands.put("announcement", new announcement());
+		commands.put("info", new Info());
+		commands.put("repeat", new Repeat());
 		//put mod commands in map
 		modCommands.put("prefix", new Prefix());
 		modCommands.put("modprefix", new ModPrefix());
@@ -89,9 +91,8 @@ public class Main {
 		SaveSystem.setup();
 		jda.getPresence().setGame(new GameImpl(".serach|.image","null",GameType.DEFAULT));
 	}
-	public static void handleCommand(CommandParser.CommandContainer cmd){
+	public static void handleCommand(CommandContainer cmd){
 		System.out.println(cmd.invoke);
-		System.out.println(cmd.isModCmd);
 		if(commands.containsKey(cmd.invoke)&&!cmd.isModCmd){
 			boolean safe=commands.get(cmd.invoke).called(cmd.args, cmd.e);
 			if(safe){

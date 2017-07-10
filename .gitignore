@@ -2,3 +2,7 @@
 /target/*
 /SearchBotData
 /SearchBotLog
+/target/
+/.settings/
+/.project
+/.classpath

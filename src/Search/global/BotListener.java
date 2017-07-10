@@ -1,7 +1,6 @@
 package Search.global;
 
 import Search.global.record.Log;
-import Search.global.record.Settings;
 import Search.util.Overrider;
 import Search.global.Main;
 import Search.global.record.SaveSystem;
@@ -16,7 +15,7 @@ public class BotListener extends ListenerAdapter{
 		try{
 			if(Overrider.parseOverride(event))return;//test for override commands
 			//test for commands
-			if(event.getMessage().getContent().startsWith(Settings.prefix)&&event.getMessage().getAuthor().getId()!=event.getJDA().getSelfUser().getId()){
+			if(event.getMessage().getContent().startsWith(SaveSystem.getPrefix(event))&&event.getMessage().getAuthor().getId()!=event.getJDA().getSelfUser().getId()){
 				Main.handleCommand(Main.parser.parse(event.getMessage().getContent(), event));
 			}
 			//same for mod commands

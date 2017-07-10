@@ -66,11 +66,10 @@ public class ImgSearch extends CommandGenerics implements Command {
 				BufferedImage image;
 				try{
 				image=ImageIO.read(new URL(link).openStream());
-				}catch(IOException e1){//403 errors and other related ones
+				ImageIO.write(image, "PNG", new File("search.png"));
+				}catch(IOException|IllegalArgumentException e1){//403 errors and other related ones
 					continue;
 				}
-				ImageIO.write(image, "PNG", new File("search.png"));
-				
 				if(new File("search.png").length()>8388608){
 					MessageEmbedImpl embed=new MessageEmbedImpl();
 					List<Field> fields=new Vector<Field>();

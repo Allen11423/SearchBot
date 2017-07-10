@@ -190,11 +190,13 @@ public class SaveSystem {
 	public static String[] getOverrides() {
 		String input="";
 		try {
-			BufferedReader in=new BufferedReader(new FileReader(new File(Settings.overrideSource)));
-			while(in.ready()){
-				input+=in.readLine()+",";
+			if(new File(Settings.overrideSource).exists()){
+				BufferedReader in=new BufferedReader(new FileReader(new File(Settings.overrideSource)));
+				while(in.ready()){
+					input+=in.readLine()+",";
+				}
+				in.close();
 			}
-			in.close();
 		} catch (IOException e) {
 			Log.logError(e);
 		}
