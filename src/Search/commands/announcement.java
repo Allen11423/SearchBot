@@ -4,10 +4,9 @@ import java.util.concurrent.TimeUnit;
 
 import Search.global.record.Settings;
 import Search.util.Lib;
-import Search.commands.Command;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
-public class announcement extends CommandGenerics implements Command{
+public class announcement extends CommandGenerics implements commands.Command{
 
 	@Override
 	public void action(String[] args, MessageReceivedEvent event) {

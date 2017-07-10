@@ -2,7 +2,6 @@ package Search.global;
 
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import javax.security.auth.login.LoginException;
@@ -19,19 +18,15 @@ import Search.global.CommandParser;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
-import net.dv8tion.jda.core.Permission;
-import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.entities.Game.GameType;
 import net.dv8tion.jda.core.entities.impl.GameImpl;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
-import Search.util.Lib;
+import util.CmdControl;
 
 public class Main {
 	public static JDA jda;
 	public static CommandParser parser=new CommandParser();
-	public static final HashMap<String,Command> commands=new HashMap<String,Command>();
-	public static final HashMap<String,Command> modCommands=new HashMap<String,Command>();
 	public static final HashMap<String,OverrideCommand> overrides=new HashMap<String,OverrideCommand>();
 	public static void main(String[] args){
 		try{
@@ -72,87 +67,30 @@ public class Main {
 	 */
 	public static void setup(){
 		jda.getPresence().setGame(new GameImpl("the Loading Game...","null",GameType.DEFAULT));
-		//put commands in map
-		commands.put("search", new Search());
-		commands.put("image", new ImgSearch());
-		commands.put("kill", new kill());
-		commands.put("nsfw", new IsNSFW());
-		commands.put("announce", new announce());
-		commands.put("announcement", new announcement());
-		commands.put("info", new Info());
-		commands.put("repeat", new Repeat());
-		//put mod commands in map
-		modCommands.put("prefix", new Prefix());
-		modCommands.put("modprefix", new ModPrefix());
+		
+		String Module="Core";
+		CmdControl.addCommand("info", new Info(), Module);
+		CmdControl.addCommand("kill", new kill(), Module);
+		
+		Module="Search";
+		CmdControl.addCommand("search", new Search(), Module);
+		CmdControl.addCommand("image", new ImgSearch(), Module);
+		CmdControl.addCommand("nsfw", new IsNSFW(), Module);
+		
+		Module="Util";
+		CmdControl.addCommand("announce", new announce(), Module);
+		CmdControl.addCommand("announcement", new announcement(), Module);
+		CmdControl.addCommand("repeat", new Repeat(), Module);
+		
+		CmdControl.addModCommand("prefix", new Prefix());
+		CmdControl.addModCommand("modprefix", new ModPrefix());
+
 		//put in override commands
 		overrides.put("log", new ViewLog());
 		//setup/build various things
 		Log.setup();
 		SaveSystem.setup();
 		jda.getPresence().setGame(new GameImpl(".serach|.image","null",GameType.DEFAULT));
-	}
-	public static void handleCommand(CommandContainer cmd){
-		System.out.println(cmd.invoke);
-		if(commands.containsKey(cmd.invoke)&&!cmd.isModCmd){
-			boolean safe=commands.get(cmd.invoke).called(cmd.args, cmd.e);
-			if(safe){
-				commands.get(cmd.invoke).action(cmd.args, cmd.e);
-				commands.get(cmd.invoke).executed(safe, cmd.e);
-			}
-			else{
-				commands.get(cmd.invoke).executed(safe, cmd.e);
-			}
-		}
-		else if(modCommands.containsKey(cmd.invoke)&&cmd.isModCmd){
-			if(!isMod(cmd.e)){
-				Lib.sendMessage(cmd.e, ":no_entry_sign: You are not authorized to use mod commands here");
-				return;
-			}
-			boolean safe=modCommands.get(cmd.invoke).called(cmd.args, cmd.e);
-			if(safe){
-				modCommands.get(cmd.invoke).action(cmd.args, cmd.e);
-				modCommands.get(cmd.invoke).executed(safe, cmd.e);
-			}
-			else{
-				modCommands.get(cmd.invoke).executed(safe, cmd.e);
-			}
-		}
-		else if(cmd.invoke.equals("help")){
-			if(cmd.isModCmd){
-				if(cmd.args.length>0&&modCommands.containsKey(cmd.args[0])){
-					modCommands.get(cmd.args[0]).help(cmd.e);
-				}
-				else{
-					Lib.printModHelp(cmd.e);
-				}
-			}
-			else{
-				if(cmd.args.length>0&&commands.containsKey(cmd.args[0])){
-					commands.get(cmd.args[0]).help(cmd.e);
-				}
-				else{
-					Lib.printHelp(cmd.e);
-				}
-			}
-		}
-	}
-	/**
-	 * checks if user is mod and has the admin privilege, or has been set to bot mod through overrides
-	 * @param e message received from user
-	 * @return whether or not user is a mod or not
-	 */
-	private static boolean isMod(MessageReceivedEvent e){
-		if(e.getAuthor().getId().equals(Settings.ownerID)){
-			return true;
-		}
-		List<Role> roles=e.getMember().getRoles();
-		for(Role r:roles){
-			if(r.hasPermission(Permission.ADMINISTRATOR)){
-				return true;
-			}
-			
-		}
-		return false;
 	}
 	public static void log(String type,String msg){
 		Log.log(type, msg);

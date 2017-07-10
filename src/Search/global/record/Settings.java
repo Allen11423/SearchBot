@@ -8,6 +8,7 @@ import Search.global.record.Secrets;
 import Search.global.record.Settings;
 import XML.Attribute;
 import XML.Elements;
+import Search.util.ModuleController;
 import Search.util.Lib;
 
 
@@ -41,6 +42,7 @@ public class Settings {
 	public String[] modded=new String[]{};
 	public boolean tJoinMsg=true;
 	public boolean tJoinPM=false;
+	public HashMap<String,ModuleController> disabled=new HashMap<String,ModuleController>();//hashmap of disabled modules module/module controller
 	//in preparation for custom messages for each server
 	public Settings(String id){
 		this.id=id;
@@ -53,6 +55,9 @@ public class Settings {
 		modded=Lib.textArray(root,"modded");
 		tJoinMsg=Lib.getBooleanSetting(false,root,"tJoin");
 		tJoinPM=Lib.getBooleanSetting(false,root,"tJoinPM");
+		for(Elements e:Lib.elementArray(root, "moduleControl")){
+			disabled.put(e.getAttribute("name").getValue(), new ModuleController(e));
+		}
 	}
 	public Elements parseToElements(){
 		Elements root=new Elements("guild");
@@ -78,7 +83,9 @@ public class Settings {
 			Elements mod=new Elements("modded").setText(s);
 			root.add(mod);
 		}
-		
+		for(String s:this.disabled.keySet()){
+			root.add(this.disabled.get(s).parseToElements());
+		}
 		Elements toggle=new Elements("toggle");
 		root.add(toggle);
 		

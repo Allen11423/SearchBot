@@ -19,7 +19,7 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
  * @author Allen
  *
  */
-public class Info extends CommandGenerics implements Command{
+public class Info extends CommandGenerics implements commands.Command{
 
 	@Override
 	public void action(String[] args, MessageReceivedEvent event) {

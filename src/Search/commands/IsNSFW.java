@@ -3,7 +3,7 @@ package Search.commands;
 import Search.util.Lib;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
-public class IsNSFW extends CommandGenerics implements Command {
+public class IsNSFW extends CommandGenerics implements commands.Command {
 
 	@Override
 	public void action(String[] args, MessageReceivedEvent event) {

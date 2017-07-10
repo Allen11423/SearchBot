@@ -11,7 +11,7 @@ import Search.global.record.Log;
 import Search.util.Lib;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
-public class Search extends CommandGenerics implements Command {
+public class Search extends CommandGenerics implements commands.Command {
 
 	public boolean called(String[] args, MessageReceivedEvent event) {
 		return true;

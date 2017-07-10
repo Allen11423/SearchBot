@@ -2,7 +2,6 @@ package Search.commands.mod;
 
 import java.util.concurrent.TimeUnit;
 
-import Search.commands.Command;
 import Search.global.record.Log;
 import Search.global.record.SaveSystem;
 import Search.global.record.Settings;
@@ -10,7 +9,7 @@ import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import Search.util.Lib;
 
-public class Prefix implements Command{
+public class Prefix implements commands.Command{
 
 	@Override
 	public boolean called(String[] args, MessageReceivedEvent event) {

@@ -26,7 +26,7 @@ import net.dv8tion.jda.core.entities.MessageEmbed.ImageInfo;
 import net.dv8tion.jda.core.entities.impl.MessageEmbedImpl;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
-public class ImgSearch extends CommandGenerics implements Command {
+public class ImgSearch extends CommandGenerics implements commands.Command {
 
 
 	public void action(String[] args, MessageReceivedEvent event) {

@@ -6,7 +6,7 @@ import Search.global.record.Settings;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import Search.util.Lib;
 
-public class Repeat extends CommandGenerics implements Command {
+public class Repeat extends CommandGenerics implements commands.Command {
 
 	@Override
 	public void action(String[] args, MessageReceivedEvent event) {
