@@ -32,7 +32,7 @@ public class announce extends CommandGenerics implements commands.Command{
 		s.reminders.put(ID, r);
 		
 		Lib.sendTempMessage(eEvent, "sending message to those here in "+(hours>0?hours+" hours ":"")+(min>0?min+" minutes ":"")+(sec>0?sec+" secounds":""),60);
-		event.getMessage().deleteMessage().complete();
+		event.getMessage().delete().complete();
 	}
 
 	@Override

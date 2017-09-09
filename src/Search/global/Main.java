@@ -18,8 +18,7 @@ import Search.global.CommandParser;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
-import net.dv8tion.jda.core.entities.Game.GameType;
-import net.dv8tion.jda.core.entities.impl.GameImpl;
+import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import util.CmdControl;
@@ -41,7 +40,7 @@ public class Main {
 	}
 	public static void startup() throws LoginException, IllegalArgumentException, InterruptedException{
 		try{
-		jda = new JDABuilder(AccountType.BOT).addListener(new BotListener()).setToken(Settings.token).buildBlocking();
+		jda = new JDABuilder(AccountType.BOT).addEventListener(new BotListener()).setToken(Settings.token).buildBlocking();
 		}catch(LoginException e){
 			TimeUnit.MINUTES.sleep(5);
 			Log.log("System", "error on login, retrying in 5 minutes");
@@ -50,14 +49,14 @@ public class Main {
 			Log.logError(e);
 		}
 		jda.setAutoReconnect(true);
-		jda.getPresence().setGame(new GameImpl(".serach|.image","null",GameType.DEFAULT));
+		jda.getPresence().setGame(Game.of(".serach|.image"));
 	}
 	public static void shutdown(){
-		jda.shutdown(false);
-		Log.log("status", "bot shutdown");
+		//jda.shutdown(false);
+		//Log.log("status", "bot shutdown");
 	}
 	public static void quit(){
-		jda.shutdown(true);
+		jda.shutdown();
 		Log.log("status", "Bot Quit");
 		Log.save();
 		System.exit(1);
@@ -66,7 +65,7 @@ public class Main {
 	 * everything that needs to be done when the JVM starts up
 	 */
 	public static void setup(){
-		jda.getPresence().setGame(new GameImpl("the Loading Game...","null",GameType.DEFAULT));
+		jda.getPresence().setGame(Game.of("the Loading Game..."));
 		
 		String Module="Core";
 		CmdControl.addCommand("info", new Info(), Module);
@@ -90,7 +89,7 @@ public class Main {
 		//setup/build various things
 		Log.setup();
 		SaveSystem.setup();
-		jda.getPresence().setGame(new GameImpl(".serach|.image","null",GameType.DEFAULT));
+		jda.getPresence().setGame(Game.of(".serach|.image"));
 	}
 	public static void log(String type,String msg){
 		Log.log(type, msg);

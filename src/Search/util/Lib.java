@@ -1,7 +1,6 @@
 package Search.util;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -74,16 +73,11 @@ public class Lib {
 		return event.getChannel().sendMessage(embed).complete();
 	}
 	public static Message sendFile(MessageReceivedEvent event, String msg, File file){
-		try {
-			Message build=null;
-			if(!(msg==null||msg.equals("null"))){
-				build=new MessageBuilder().append(msg).build();
-			}
-			return event.getChannel().sendFile(file, build).complete();
-		} catch (IOException e) {
-			Log.logError(e);
+		Message build=null;
+		if(!(msg==null||msg.equals("null"))){
+			build=new MessageBuilder().append(msg).build();
 		}
-		return sendFile(event,msg,file);
+		return event.getChannel().sendFile(file, build).complete();
 	}
 	/**
 	 * Sends a message which will be deleted after a period of time
@@ -147,7 +141,7 @@ public class Lib {
 			return message;
 	}
 	public static Message sendPrivate(MessageReceivedEvent event, String msg){
-			Message message=event.getAuthor().getPrivateChannel().sendMessage(msg).complete();
+			Message message=event.getAuthor().openPrivateChannel().complete().sendMessage(msg).complete();
 			return message;
 	}
 	private static Vector<String> splitMessage(String msg){
@@ -214,7 +208,7 @@ public class Lib {
 	 * @return message sent
 	 */
 	public static Message sendMessageFormated(GuildMemberJoinEvent event,String msg){
-		Message message=event.getGuild().getPublicChannel().sendMessage(Lib.FormatMessage(event,msg)).complete();
+		Message message=event.getGuild().getDefaultChannel().sendMessage(Lib.FormatMessage(event,msg)).complete();
 		return message; 
 	}
 	/**
