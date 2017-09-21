@@ -9,7 +9,7 @@ import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import Search.util.Lib;
 
-public class ModPrefix implements commands.Command {
+public class ModPrefix implements Search.commands.Command {
 
 	@Override
 	public boolean called(String[] args, MessageReceivedEvent event) {

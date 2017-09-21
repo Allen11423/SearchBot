@@ -21,7 +21,7 @@ import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
-import util.CmdControl;
+import Search.util.CmdControl;
 
 public class Main {
 	public static JDA jda;
