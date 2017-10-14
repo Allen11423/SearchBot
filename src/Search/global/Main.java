@@ -81,6 +81,10 @@ public class Main {
 		CmdControl.addCommand("announcement", new announcement(), Module);
 		CmdControl.addCommand("repeat", new Repeat(), Module);
 		
+		Module="RandomGarbage";
+		CmdControl.addCommand("mombo", new Combo(), Module);
+		CmdControl.addCommand("momcombo", new Combo(), Module);
+		
 		CmdControl.addModCommand("prefix", new Prefix());
 		CmdControl.addModCommand("modprefix", new ModPrefix());
 

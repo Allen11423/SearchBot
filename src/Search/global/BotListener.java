@@ -2,6 +2,7 @@ package Search.global;
 
 import Search.global.record.Log;
 import Search.util.Overrider;
+import Search.commands.Combo;
 import Search.global.Main;
 import Search.global.record.SaveSystem;
 import net.dv8tion.jda.core.events.ReadyEvent;
@@ -24,6 +25,10 @@ public class BotListener extends ListenerAdapter{
 				else if(event.getMessage().getContent().toLowerCase().contains("prefix")){
 					Search.util.Lib.sendMessage(event, "prefix for server:"+SaveSystem.getPrefix(event));
 				}
+			}
+			//template for momCombo
+			if(event.getMessage().getContent().toLowerCase().contains("mom joke")){
+				Combo.comboed(event);
 			}
 		}catch(Exception e){
 			Log.logError(e);

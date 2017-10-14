@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 import Search.global.Main;
 import Search.global.record.Log;
@@ -15,6 +16,7 @@ import Search.global.record.Settings;
 import XML.Attribute;
 import XML.Elements;
 import XML.XMLStAXFile;
+import Search.global.record.Data;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.events.guild.member.GuildMemberJoinEvent;
@@ -85,6 +87,38 @@ public class SaveSystem {
 			Log.log("ERROR", "error loading guilds");
 		}
 		file.endReader();
+	}
+	/**
+	 * Get the locally saved user data
+	 * @param id id of the user
+	 * @return Data object representing user data
+	 */
+	public static Data getUser(String id){
+		if(Data.users.containsKey(id)){
+			return Data.users.get(id);
+		}
+		else{
+			return new Data(id);
+		}
+	}
+	/**
+	 * Gets all users which are recorded by bot(called at least once in any method) i.e. lapis
+	 * @return vector of all users the bot is tracking
+	 */
+	public static Vector<Data> getRegisteredUsers(){
+		Vector<Data> users=new Vector<Data>();
+		for(String key:Data.users.keySet()){
+			users.add(Data.users.get(key));
+		}
+		return users;
+	}
+	/**
+	 * Set the user data to local save
+	 * @param user user data to save locally
+	 */
+	public static void setUser(Data user){
+		Data.users.put(user.id, user);
+		//pushUserData();
 	}
 	public static Settings getGuild(String id){
 		try{
