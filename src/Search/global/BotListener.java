@@ -27,7 +27,11 @@ public class BotListener extends ListenerAdapter{
 				}
 			}
 			//template for momCombo
-			if(event.getMessage().getContent().toLowerCase().contains("mom joke")){
+			String content=event.getMessage().getContent().toLowerCase();
+			if(content.contains("mom joke")
+					&&content.contains("/")
+					&&Character.isDigit(content.substring(content.indexOf("/")+1).toCharArray()[0])
+					&&Character.isDigit(content.substring(0,content.indexOf("/")).toCharArray()[content.substring(0,content.indexOf("/")).toCharArray().length-1])){
 				Combo.comboed(event);
 			}
 		}catch(Exception e){

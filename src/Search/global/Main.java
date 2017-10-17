@@ -31,7 +31,6 @@ public class Main {
 		try{
 			Main.startup();
 			Main.setup();
-			global.Main.main(null);
 			
 		}catch(Exception e){
 			Log.logError(e);
@@ -84,7 +83,9 @@ public class Main {
 		Module="RandomGarbage";
 		CmdControl.addCommand("mombo", new Combo(), Module);
 		CmdControl.addCommand("momcombo", new Combo(), Module);
-		
+		CmdControl.addCommand("mompoints", new Point(), Module);
+		CmdControl.addCommand("point", new Point(), Module);
+		CmdControl.addCommand("points", new Point(), Module);
 		CmdControl.addModCommand("prefix", new Prefix());
 		CmdControl.addModCommand("modprefix", new ModPrefix());
 
