@@ -16,10 +16,12 @@ import Search.global.record.Settings;
 import XML.Attribute;
 import XML.Elements;
 import XML.XMLStAXFile;
+import Search.googleutil.drive.DataEnum;
+import Search.googleutil.drive.DriveFile;
+import Search.googleutil.drive.DriveManager;
 import Search.global.record.Data;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 /**
  * Class containing all the static methods relating to saving/loading data for the bot
@@ -44,27 +46,45 @@ public class SaveSystem {
 			file.endWriter();
 		}
 		load();
+		buildLeaderBoards();
+	}
+	private static void buildLeaderBoards(){
+		for(String s: Data.users.keySet()){
+			addToLeaderBoards(Data.users.get(s));//should automatically sort things, first in list is largest
+		}
+	}
+	private static void addToLeaderBoards(Data user){
+		for(int i=0;i<(Settings.momLeaders.size()<10?Settings.momLeaders.size():10);i++){
+			if(Settings.momLeaders.get(i).getPoints()<=user.getPoints()){
+				Settings.momLeaders.add(i, user);
+				break;
+			}
+		}
+		//should only go over by 1 at max
+		if(Settings.momLeaders.size()>10){
+			Settings.momLeaders.remove(10);//remove last
+		}
+		if(Settings.momLeaders.size()==0){
+			Settings.momLeaders.add(user);
+		}
 	}
 	/**
 	 * Loads saved data from file
 	 */
 	public static void load(){
-		Settings.guilds.clear();
+		loadGuilds();
 		XMLStAXFile file=new XMLStAXFile(new File(Settings.dataSource));
 		file.readXMLFile();
-		try{
-		ArrayList<Elements> guilds=file.parseToElements("guild");
-		for(Elements e:guilds){
+		ArrayList<Elements> users=file.parseToElements("user");
+		for(Elements e:users){
 			try{
-			Settings.guilds.put(e.getAttribute("id").getValue(), new Settings(e));
-			}catch(Exception e1){
-				Log.log("ERROR", "error putting guild(likely missing id attribute)"+e);
-				Log.logError(e1);
+				Data.users.put(e.getAttribute("id").getValue(), new Data(e));
+			}catch(Exception e2){
+				Log.log("ERROR", "error putting user(likely missing id attribute)"+e);
+				Log.logError(e2);
 			}
 		}
-		}catch(Exception e){
-			Log.log("ERROR", "error loading guilds");
-		}
+		file.endReader();
 	}
 	/**
 	 * Loads guild info from file
@@ -159,23 +179,6 @@ public class SaveSystem {
 		file.writeElement(doc);
 		file.endWriter();
 	}
-	public static String getJoin(GuildMemberJoinEvent event){
-		return getJoin(event.getGuild());
-	}
-	public static String getJoin(Guild guild){
-		if(Settings.guilds.containsKey(guild.getId())){
-			String join=Settings.guilds.get(guild.getId()).joinMsg;
-			if(join.equals("")){
-				return Settings.join;
-			}
-			else{
-				return join;
-			}
-		}
-		else{
-			return Settings.join;
-		}
-	}
 	public static String getPrefix(MessageReceivedEvent event){
 		if(event.isFromType(ChannelType.PRIVATE)){
 			return Settings.prefix;
@@ -266,5 +269,28 @@ public class SaveSystem {
 		}catch(Exception e){
 			
 		}
+	}
+	public static void pushUserData() {
+		XMLStAXFile file=new XMLStAXFile(new File(Settings.dataSource));
+		file.readXMLFile();
+		Elements doc=file.parseDocToElements();
+		file.endReader();
+		for(int i=0;i<doc.getChilds().size();i++){
+			if(doc.getChilds().get(i).getTagName().equals("user")){
+				if(Data.users.containsKey(doc.getChilds().get(i).getAttribute("id").getValue())){
+					doc.getChilds().remove(i);
+					i--;
+				}
+			}
+		}
+		for(String key:Data.users.keySet()){
+			doc.getChilds().add(Data.users.get(key).parseToElements());
+		}
+		file.writeXMLFile();
+		file.startWriter();
+		file.writeElement(doc);
+		file.endWriter();
+		DriveManager.update(new DriveFile(Settings.dataSource,DataEnum.SearchData.id));
+		
 	}
 }

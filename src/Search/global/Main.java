@@ -10,6 +10,7 @@ import Search.global.ArgumentParser.ArgContainer;
 import Search.global.record.Log;
 import Search.global.record.Settings;
 import Search.global.record.SaveSystem;
+import Search.global.record.Secrets;
 import Search.commands.*;
 import Search.commands.mod.*;
 import Search.commands.override.*;
@@ -22,6 +23,9 @@ import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import Search.util.CmdControl;
+import Search.googleutil.drive.DataEnum;
+import Search.googleutil.drive.DriveFile;
+import Search.googleutil.drive.DriveManager;
 
 public class Main {
 	public static JDA jda;
@@ -29,8 +33,21 @@ public class Main {
 	public static final HashMap<String,OverrideCommand> overrides=new HashMap<String,OverrideCommand>();
 	public static void main(String[] args){
 		try{
+			//disabled for now until I get everything set up
+			Runtime.getRuntime().addShutdownHook(new Thread() {//bot shutdown, push and upload data
+				@Override
+				public void run() {
+					System.out.println("shutting down");
+					if(Settings.token.contentEquals(Secrets.token)){
+						SaveSystem.pushUserData();
+						Log.save();//last as this may take a long time as is not as high of a priority to complete
+						DriveManager.update(new DriveFile(Log.LogSource,DataEnum.LogSource.id));
+					}
+				}   
+			}); 
 			Main.startup();
 			Main.setup();
+			global.Main.main(null);
 			
 		}catch(Exception e){
 			Log.logError(e);
@@ -86,12 +103,19 @@ public class Main {
 		CmdControl.addCommand("mompoints", new Point(), Module);
 		CmdControl.addCommand("point", new Point(), Module);
 		CmdControl.addCommand("points", new Point(), Module);
+		CmdControl.addCommand("top", new Leader(), Module);
+		CmdControl.addCommand("leaderboard", new Leader(), Module);
+		
+		
+		
 		CmdControl.addModCommand("prefix", new Prefix());
 		CmdControl.addModCommand("modprefix", new ModPrefix());
 
 		//put in override commands
 		overrides.put("log", new ViewLog());
+		overrides.put("push", new DrivePush());
 		//setup/build various things
+		DriveManager.setup();
 		Log.setup();
 		SaveSystem.setup();
 		jda.getPresence().setGame(Game.of(".serach|.image"));

@@ -21,7 +21,7 @@ import Search.global.record.Settings;
  *
  */
 public class Log {
-	public static final String LogSource="FFBEBotLog";
+	public static final String LogSource="SearchBotLog";
 	private static ArrayList<String> log=new ArrayList<String>();
 	private static boolean setup=false;
 	private static Semaphore lock=new Semaphore(1);

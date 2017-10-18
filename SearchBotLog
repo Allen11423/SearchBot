@@ -60,3 +60,29 @@
 [08:29:51][status]logged in as: TestBot
 [08:29:54][status]Prefix changed to ( by hiddendoom45 on G:RandomTests(244847610475577345)
 [04-15 09:46:12][Log]log saved
+[08:46:25][status]logged in as: TestBot
+[08:46:25][ERROR]java.lang.NullPointerException
+	at java.io.Reader.<init>(Reader.java:78)
+	at java.io.InputStreamReader.<init>(InputStreamReader.java:72)
+	at Search.googleutil.drive.DriveManager.authorize(DriveManager.java:82)
+	at Search.googleutil.drive.DriveManager.getDriveService(DriveManager.java:104)
+	at Search.googleutil.drive.DriveManager.setup(DriveManager.java:112)
+	at Search.global.Main.setup(Main.java:112)
+	at Search.global.Main.main(Main.java:49)
+[10-18 08:46:25][Log]log saved
+[09:41:12][status]logged in as: TestBot
+[09:41:12][DRIVE]downloaded SearchBotData
+[09:41:12][DRIVE]downloaded SearchBotLog
+[09:41:27][DRIVE]updated SearchBotData
+[10-18 09:41:27][Log]log saved
+[09:41:38][status]logged in as: TestBot
+[09:41:39][DRIVE]downloaded SearchBotData
+[09:41:39][DRIVE]downloaded SearchBotLog
+[09:42:07][status]class Search.commands.Point called by hiddendoom45 on G:RandomTests(244847610475577345)
+[09:54:03][DRIVE]updated SearchBotData
+[10-18 09:54:03][Log]log saved
+[10:01:00][status]logged in as: TestBot
+[10:01:00][DRIVE]downloaded SearchBotData
+[10:01:01][DRIVE]downloaded SearchBotLog
+[10:01:08][DRIVE]updated SearchBotData
+[10-18 10:01:08][Log]log saved
