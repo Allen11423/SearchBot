@@ -11,6 +11,7 @@ import Search.global.record.Log;
 import Search.global.record.Settings;
 import Search.global.record.SaveSystem;
 import Search.global.record.Secrets;
+import Search.Library.FlavorManager;
 import Search.commands.*;
 import Search.commands.mod.*;
 import Search.commands.override.*;
@@ -47,7 +48,9 @@ public class Main {
 			}); 
 			Main.startup();
 			Main.setup();
-			global.Main.main(null);
+			if(Settings.token.contentEquals(Secrets.token)){
+				global.Main.main(null);
+			}
 			
 		}catch(Exception e){
 			Log.logError(e);
@@ -110,11 +113,13 @@ public class Main {
 		
 		CmdControl.addModCommand("prefix", new Prefix());
 		CmdControl.addModCommand("modprefix", new ModPrefix());
+		CmdControl.addModCommand("addflavor", new addFlavor());
 
 		//put in override commands
 		overrides.put("log", new ViewLog());
 		overrides.put("push", new DrivePush());
 		//setup/build various things
+		FlavorManager.setup();
 		DriveManager.setup();
 		Log.setup();
 		SaveSystem.setup();

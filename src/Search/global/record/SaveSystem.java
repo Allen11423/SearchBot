@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+import Search.Library.Flavor;
+import Search.Library.FlavorManager;
 import Search.global.Main;
 import Search.global.record.Log;
 import Search.global.record.Settings;
@@ -39,6 +41,7 @@ public class SaveSystem {
 			for(Guild g:guilds){
 				root.add(new Settings(g.getId()).parseToElements());
 			}
+			
 			XMLStAXFile file=new XMLStAXFile(new File(Settings.dataSource));
 			file.writeXMLFile();
 			file.startWriter();
@@ -48,14 +51,24 @@ public class SaveSystem {
 		load();
 		buildLeaderBoards();
 	}
-	private static void buildLeaderBoards(){
+	public static void buildLeaderBoards(){
+		Settings.momLeaders.clear();
 		for(String s: Data.users.keySet()){
 			addToLeaderBoards(Data.users.get(s));//should automatically sort things, first in list is largest
 		}
 	}
 	private static void addToLeaderBoards(Data user){
-		for(int i=0;i<(Settings.momLeaders.size()<10?Settings.momLeaders.size():10);i++){
-			if(Settings.momLeaders.get(i).getPoints()<=user.getPoints()){
+		int point = user.getPoints();
+		int size=Settings.momLeaders.size();
+		if(size==0){
+			Settings.momLeaders.add(user);
+			return;
+		}
+		if(point<=Settings.momLeaders.get(size-1).getPoints()){
+			return;
+		}
+		for(int i=0;i<size;i++){
+			if(Settings.momLeaders.get(i).getPoints()<=point){
 				Settings.momLeaders.add(i, user);
 				break;
 			}
@@ -63,9 +76,6 @@ public class SaveSystem {
 		//should only go over by 1 at max
 		if(Settings.momLeaders.size()>10){
 			Settings.momLeaders.remove(10);//remove last
-		}
-		if(Settings.momLeaders.size()==0){
-			Settings.momLeaders.add(user);
 		}
 	}
 	/**
@@ -107,6 +117,20 @@ public class SaveSystem {
 			Log.log("ERROR", "error loading guilds");
 		}
 		file.endReader();
+	}
+	public static void loadFlavors(){
+		XMLStAXFile file= new XMLStAXFile(new File(Settings.dataSource));
+		file.readXMLFile();
+		try{
+			ArrayList<Elements> flavors=file.parseToElements("flavor");
+			for(Elements e:flavors){
+				Flavor f = new Flavor(e);
+				FlavorManager.addFlavor(f.nameID(), f);
+			}
+		}
+		catch(Exception e){
+			Log.log("ERROR", "error loading flavor");
+		}
 	}
 	/**
 	 * Get the locally saved user data
@@ -290,7 +314,23 @@ public class SaveSystem {
 		file.startWriter();
 		file.writeElement(doc);
 		file.endWriter();
+		pushFlavorData();
 		DriveManager.update(new DriveFile(Settings.dataSource,DataEnum.SearchData.id));
 		
+	}
+	public static void pushFlavorData(){
+		XMLStAXFile file= new XMLStAXFile(new File(Settings.dataSource));
+		file.readXMLFile();
+		Elements doc=file.parseDocToElements();
+		file.endReader();
+		for(int i=0;i<doc.getChilds().size();i++){
+			if(doc.getChilds().get(i).equals("flavor")){
+				doc.getChilds().remove(i);
+				i--;
+			}
+		}
+		for(Flavor f:FlavorManager.getFlavors()){
+			doc.add(f.parseToElements());
+		}
 	}
 }

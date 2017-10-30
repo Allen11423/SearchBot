@@ -2,7 +2,7 @@ package Search.commands;
 
 import java.util.List;
 
-import Search.Library.mom.ComboData;
+import Search.Library.FlavorManager;
 import Search.global.record.Data;
 import Search.global.record.SaveSystem;
 import net.dv8tion.jda.core.entities.Message;
@@ -17,7 +17,7 @@ public class Combo extends CommandGenerics implements Command {
 	public void action(String[] args, MessageReceivedEvent event) {
 		Data user=null;
 		if(args.length<=0){//if no arguments send combo value for user
-			sendComboMsg(event.getAuthor().getAsMention(),event,SaveSystem.getUser(event.getAuthor().getId()).getCombo(),false);
+			sendComboMsg(event.getAuthor().getAsMention(),event.getAuthor().getName(),event,SaveSystem.getUser(event.getAuthor().getId()).getCombo());
 			return;
 		}
 		//stuff to get user/send message/add combo
@@ -34,32 +34,41 @@ public class Combo extends CommandGenerics implements Command {
 			}
 			user=SaveSystem.getUser(args[0]);
 		}
-		boolean rankup=true;
 		if(!(user==null)){
-			int combo=user.getCombo();
 			user.comboAdded();
-			if(combo==user.getCombo()){
-				rankup=false;
-			}
 			SaveSystem.setUser(user);
 		}
 		if(event.getMessage().getMentionedUsers().size()>0){
-			sendComboMsg(event.getMessage().getMentionedUsers().get(0).getAsMention(),event,user.getCombo(),rankup);
+			sendComboMsg(event.getMessage().getMentionedUsers().get(0).getAsMention(),event.getMessage().getMentionedUsers().get(0).getName(),event,user.getCombo());
 		}
 		else if(args.length>0&&Lib.isNumber(args[0])){
-			sendComboMsg(event.getGuild().getMemberById(args[0]).getAsMention(),event,user.getCombo(),rankup);
+			sendComboMsg(event.getGuild().getMemberById(args[0]).getAsMention(),event.getGuild().getMemberById(args[0]).getNickname(),event,user.getCombo());
 		}
 
 	}
-	public static void sendComboMsg(String userMention,MessageReceivedEvent event, int combo,boolean rankup){
-		String s;
-		if(rankup){
-			s=""+userMention+"'s mombo went up to "+combo+" "+ComboData.get(combo).getRand();
+	public static void sendComboMsg(String userMention,String userName,MessageReceivedEvent event, int combo){
+		String s="";
+		switch(combo){
+		case 1:
+			s=FlavorManager.getRand("Combo1", event.getGuild());
+			break;
+		case 2:
+			s=FlavorManager.getRand("Combo2", event.getGuild());
+			break;
+		case 3:
+			s=FlavorManager.getRand("Combo3", event.getGuild());
+			break;
+		case 4:
+			s=FlavorManager.getRand("Combo4", event.getGuild());
+			break;
+		case 5:
+			s=FlavorManager.getRand("Combo5", event.getGuild());
+			break;
+		default:
+			break;
 		}
-		else{
-			s=""+userMention+" "+ComboData.get(combo).getRand();
-		}
-		s=s.replace("%combo%", ""+combo);
+		s=s.replace("%userMention%", userMention)
+				.replace("%userName%", userName);
 		Lib.sendMessage(event, s);
 	}
 	public static void comboed(MessageReceivedEvent event){
@@ -79,14 +88,21 @@ public class Combo extends CommandGenerics implements Command {
 
 		String s;
 		if(event.getMessage().getMentionedUsers().size()>0){
-			s=event.getMessage().getMentionedUsers().get(0).getAsMention()+" got "+points+" mom points, better deposit it like how I deposit it in yourmom";
+			s=FlavorManager.getRand("addPoint",event.getGuild())
+					.replace("%userMention%", event.getMessage().getMentionedUsers().get(0).getAsMention())
+					.replace("%userName%", event.getMessage().getMentionedUsers().get(0).getName())
+					.replace("%point%", ""+points*user.getCombo());
 		}
 		else{
-			s=lastNonAuthor(event.getAuthor().getId(),event.getChannel()).getAsMention()+" got "+points+" mom points, better deposit it like how I deposit it in yourmom";
+			s=FlavorManager.getRand("addPoint",event.getGuild())
+					.replace("%userMention%", lastNonAuthor(event.getAuthor().getId(),event.getChannel()).getAsMention())
+					.replace("%userName%", lastNonAuthor(event.getAuthor().getId(),event.getChannel()).getName())
+					.replace("%point%", ""+points*user.getCombo());
 		}
 
 		Lib.sendMessage(event, s);
 		SaveSystem.setUser(user);
+		SaveSystem.buildLeaderBoards();
 	}
 	public static User lastNonAuthor(String authID, MessageChannel channel){
 		List<Message> past=channel.getHistory().retrievePast(50).complete();
@@ -138,10 +154,9 @@ public class Combo extends CommandGenerics implements Command {
 	}
 	@Override
 	public void help(MessageReceivedEvent event) {
-		String s =".mombo [userID/userMention] [combo]\n"
-				+ "adds to current mombo\n"
-				+ "[userID/userMention] either mention user or the numberical ID for the user\n"
-				+ "[combo] amount to add to mombo otherwise +1";
+		String s =".mombo [userID/@user]\n"
+				+ "adds to current mombo for the user\n"
+				+ "[userID/@user] either mention user or the numberical ID for the user";
 		Lib.sendMessage(event, s);
 	}
 

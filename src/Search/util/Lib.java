@@ -35,16 +35,16 @@ public class Lib {
 		String msg="__***Help List***__\n"
 				+ "Use "+SaveSystem.getPrefix(event)+"help [command] to get more info on a specific command, i.e.: "+SaveSystem.getPrefix(event)+"help ping\n\n"
 				+ "__**Modules**__\n"
-				+ "**Core** - `ping` `invite`\n"
+				+ "**Core** - `ping` `info`\n"
 				+ "Core commands for bot\n\n"
-				+ "**Exvius** - `awaken` `equipment` `lore` `skill` `unitart` `unit`\n"
-				+ "Commands to extract info from Exvicus wiki(best for GL players)\n\n"
-				+ "**Reddit** - `rawaken` `requipment` `rskill` `runit`\n"
-				+ "Commands to extract info from Reddit wiki(best for JP players or GL players looking for future info)\n\n"
-				+ "**Salt** - `summon` `salty` `waifu`\n"
-				+ "Random commands based on chance\n\n"
-				+ "**WIP** - `whale` `banner` `11pull` `pull` `unitinventory`\n"
-				+ "Commands that are work in progress currently unimplemented\n\n"
+				+ "**Search** - `search` `image`\n"
+				+ "Commands to search things\n\n"
+				+ "**Utility** - `announce` `announcement` `repeat`\n"
+				+ "Random useful stuff mostly for guild raid\n\n"
+				+ "**Mom** - `mombo` `point` `top`\n"
+				+ "Enough said\n\n"
+				+ "**WIP** - \n"
+				+ "Commands that are work in progress currently unimplemented(may take months/whenever I feel like adding these)\n\n"
 				+ "Don't include the example brackets when using commands!\n"
 				+ "To view mod commands, use "+SaveSystem.getModPrefix(event)+"help";
 		Lib.sendMessage(event, msg);
@@ -574,9 +574,12 @@ public class Lib {
 	 * @return
 	 */
 	public static String extract(String[] args){
+		return extract(args," ");
+	}
+	public static String extract(String[] args,String space){
 		String out="";
 		for(String s:args){
-			out+=" "+s;
+			out+=space+s;
 		}
 		return out.substring(1);
 	}
@@ -585,7 +588,13 @@ public class Lib {
 		System.arraycopy(second, 0, result, first.length, second.length);
 		return result;
 	}
-
+	public static <T> String[] convert(T[] first){
+		String[] s=new String[first.length]; 
+		for(int i=0;i<first.length;i++){
+			s[i]=first[i].toString();
+		}
+		return s;
+	}
 	/**
 	 * 
 	 * @param s
