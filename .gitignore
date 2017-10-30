@@ -2,6 +2,11 @@
 /target/*
 /SearchBotData
 /SearchBotLog
+/FFBEBotData
+/FFBEBotLog
+/FFBEBotPreload
+/.classpath
+/.project
 /target/
 /.settings/
 /.project
