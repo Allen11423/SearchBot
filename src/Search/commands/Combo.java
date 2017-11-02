@@ -85,18 +85,23 @@ public class Combo extends CommandGenerics implements Command {
 		Data user=SaveSystem.getUser(id);
 		int points=ExtractFirstNum(event.getMessage().getContent());
 		user.addPoints(points);
-
+		Data author = SaveSystem.getUser(event.getAuthor().getId());
+		author.penalizePoints(Math.abs(points));
 		String s;
+		if(points>=0){
+			s=FlavorManager.getRand("addPoint",event.getGuild());
+		}
+		else{
+			s=FlavorManager.getRand("deletePoint",event.getGuild());
+		}
 		if(event.getMessage().getMentionedUsers().size()>0){
-			s=FlavorManager.getRand("addPoint",event.getGuild())
-					.replace("%userMention%", event.getMessage().getMentionedUsers().get(0).getAsMention())
-					.replace("%userName%", event.getMessage().getMentionedUsers().get(0).getName())
+			s=s.replace("%userMention%", event.getMessage().getMentionedUsers().get(0).getAsMention())
+					.replace("%userName%", event.getGuild().getMemberById(event.getMessage().getMentionedUsers().get(0).getId()).getNickname())
 					.replace("%point%", ""+points*user.getCombo());
 		}
 		else{
-			s=FlavorManager.getRand("addPoint",event.getGuild())
-					.replace("%userMention%", lastNonAuthor(event.getAuthor().getId(),event.getChannel()).getAsMention())
-					.replace("%userName%", lastNonAuthor(event.getAuthor().getId(),event.getChannel()).getName())
+			s=s.replace("%userMention%", lastNonAuthor(event.getAuthor().getId(),event.getChannel()).getAsMention())
+					.replace("%userName%", event.getGuild().getMemberById(lastNonAuthor(event.getAuthor().getId(),event.getChannel()).getId()).getNickname())
 					.replace("%point%", ""+points*user.getCombo());
 		}
 

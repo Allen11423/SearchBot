@@ -36,7 +36,7 @@ public class Settings {
 	public static final long ID=System.currentTimeMillis();//ID for the bot based on when it was started
 	public static final ScheduledExecutorService executor = Executors.newScheduledThreadPool(5);//used for various threaded activities
 	public static final HashMap<String,Settings> guilds=new HashMap<String,Settings>();//map of guilds and settings stored locally for easy access
-	
+	public static long dailyTime;
 	public static final Vector<Data> momLeaders=new Vector<Data>();
 	
 	public String guildPrefix="";

@@ -108,7 +108,8 @@ public class Main {
 		CmdControl.addCommand("points", new Point(), Module);
 		CmdControl.addCommand("top", new Leader(), Module);
 		CmdControl.addCommand("leaderboard", new Leader(), Module);
-		
+		CmdControl.addCommand("dailies", new Dailies(), Module);
+		CmdControl.addCommand("daily", new Dailies(), Module);
 		
 		
 		CmdControl.addModCommand("prefix", new Prefix());

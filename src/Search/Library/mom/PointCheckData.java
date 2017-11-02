@@ -3,7 +3,7 @@ package Search.Library.mom;
 import Search.util.rng.RandomLibs;
 
 public enum PointCheckData {
-	M1("%userMention% has %dpoint% this session for an all time total of %point% mom points!");
+	M1("%userMention% got %dpoint% today for an all time total of %point% mom points!");
 	
 	private String msg;
 	PointCheckData(String msg){

@@ -7,6 +7,7 @@ import Search.Library.mom.PointGetData;
 public enum FlavorDic {
 	pointadd("addPoint",PointGetData.values()),
 	pointcheck("checkPoint", PointCheckData.values()),
+	pointdelete("deletePoint",PointGetData.values()),
 	C1("Combo1",ComboData.C1.options),
 	C2("Combo2",ComboData.C2.options),
 	C3("Combo3",ComboData.C3.options),

@@ -27,6 +27,16 @@ public class addFlavor extends ModGenerics implements Command {
 				Lib.sendMessage(event, "You must include %userMention% or %userName% in the text and %point% to display the number of points the user got");
 			}
 		}
+		else if(args[0].equalsIgnoreCase(FlavorDic.pointdelete.toString())){
+			String s= Lib.extract(Arrays.copyOfRange(args, 1, args.length));
+			if((s.contains("%userMention%")||s.contains("%userName%"))&&(s.contains("%point%"))){
+				FlavorManager.addFlavorString(FlavorDic.pointdelete.toString(), event.getGuild().getId(), s);
+				defaultSuccess(event);
+			}
+			else{
+				Lib.sendMessage(event, "You must include %userMention% or %userName% in the text and %point% to display the number of points the user got");
+			}
+		}
 		else if(args[0].equalsIgnoreCase(FlavorDic.C1.toString())){
 			addCombo(FlavorDic.C1.toString(),args,event);
 		}

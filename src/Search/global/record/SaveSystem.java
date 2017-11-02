@@ -7,8 +7,11 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.Vector;
+import java.util.concurrent.TimeUnit;
 
 import Search.Library.Flavor;
 import Search.Library.FlavorManager;
@@ -48,6 +51,12 @@ public class SaveSystem {
 			file.writeElement(root);
 			file.endWriter();
 		}
+		setDailyTime();
+		Settings.executor.scheduleWithFixedDelay(new Runnable(){
+			public void run(){
+				setDailyTime();
+			}
+		},Settings.dailyTime+86400000-System.currentTimeMillis(),86400000,TimeUnit.MILLISECONDS);
 		load();
 		buildLeaderBoards();
 	}
@@ -117,6 +126,19 @@ public class SaveSystem {
 			Log.log("ERROR", "error loading guilds");
 		}
 		file.endReader();
+	}
+	
+	public static void setDailyTime(){
+		Calendar cal=Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+		long Current=System.currentTimeMillis();
+		int hour=cal.get(Calendar.HOUR_OF_DAY);
+		int minute=cal.get(Calendar.MINUTE);
+		int second=cal.get(Calendar.SECOND);
+		int mili=cal.get(Calendar.MILLISECOND);
+		if(hour<0){
+			hour+=24;
+		}
+		Settings.dailyTime=Current-(hour*3600000)-(minute*60000)-(second*1000)-(mili);
 	}
 	public static void loadFlavors(){
 		XMLStAXFile file= new XMLStAXFile(new File(Settings.dataSource));
