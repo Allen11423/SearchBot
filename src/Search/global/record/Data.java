@@ -53,10 +53,8 @@ public class Data {
 	}
 	private void dataCheck(){
 		if(lastDataCheck<Settings.dailyTime){
-			momCombo=0;
+			momCombo=1;
 			momPointsDaily=0;
-		}
-		else{
 			lastDataCheck=System.currentTimeMillis();
 		}
 	}
@@ -65,21 +63,26 @@ public class Data {
 		return momCombo;
 	}
 	public void comboAdded(){
+		dataCheck();
 		if(momCombo==5)return;
 		momCombo++;
 	}
 	public void addPoints(int points){
+		dataCheck();
 		momPoints+=points*momCombo;
 		momPointsDaily+=points*momCombo;
 	}
 	public void penalizePoints(int points){
+		dataCheck();
 		momPoints-=points;
 		momPointsDaily-=points;
 	}
 	public int getDailyPoints(){
+		dataCheck();
 		return momPointsDaily;
 	}
 	public int getPoints(){
+		dataCheck();
 		return momPoints;
 	}
 	public Elements parseToElements() {

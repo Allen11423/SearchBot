@@ -18,7 +18,6 @@ public class ResetPoint extends OverrideGenerics implements OverrideCommand {
 
 	@Override
 	public void help(MessageReceivedEvent event) {
-		// TODO Auto-generated method stub
 
 	}
 
