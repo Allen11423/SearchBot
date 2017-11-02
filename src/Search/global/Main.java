@@ -119,6 +119,7 @@ public class Main {
 		//put in override commands
 		overrides.put("log", new ViewLog());
 		overrides.put("push", new DrivePush());
+		overrides.put("preset", new ResetPoint());
 		//setup/build various things
 		FlavorManager.setup();
 		DriveManager.setup();

@@ -40,6 +40,14 @@ public class Data {
 			return true;
 		}
 	}
+	public Data resetPoints(){
+		momPoints=0;
+		momPointsDaily=0;
+		momCombo=1;
+		lastDaily=0;
+		lastDataCheck=0;
+		return this;
+	}
 	public void dailyUsed(){
 		lastDaily=System.currentTimeMillis();
 	}
