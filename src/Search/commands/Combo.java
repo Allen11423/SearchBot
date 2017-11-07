@@ -26,7 +26,6 @@ public class Combo extends CommandGenerics implements Command {
 				return;
 			}
 			user=SaveSystem.getUser(event.getMessage().getMentionedUsers().get(0).getId());
-
 		}
 		else if(args.length>0&&Lib.isNumber(args[0])){
 			if(args[0].equals(event.getAuthor().getId())){//mentions self return
@@ -46,7 +45,7 @@ public class Combo extends CommandGenerics implements Command {
 		}
 
 	}
-	public static void sendComboMsg(String userMention,String userName,MessageReceivedEvent event, int combo){
+	public static String getComboMsg(String userMention,String userName,MessageReceivedEvent event, int combo){
 		String s="";
 		switch(combo){
 		case 1:
@@ -65,11 +64,16 @@ public class Combo extends CommandGenerics implements Command {
 			s=FlavorManager.getRand("Combo5", event.getGuild());
 			break;
 		default:
+			s="Combo out of range";//default case to avoid errors
 			break;
 		}
+		//generic replace username/mention
 		s=s.replace("%userMention%", userMention)
 				.replace("%userName%", userName);
-		Lib.sendMessage(event, s);
+		return s;
+	}
+	public static void sendComboMsg(String userMention,String userName,MessageReceivedEvent event, int combo){
+		Lib.sendMessage(event, getComboMsg(userMention,userName,event,combo));
 	}
 	public static void comboed(MessageReceivedEvent event){
 		String id;
@@ -84,17 +88,20 @@ public class Combo extends CommandGenerics implements Command {
 		}
 		Data user=SaveSystem.getUser(id);
 		int points=ExtractFirstNum(event.getMessage().getContent());
-		user.addPoints(points);
+		boolean comboed=user.addPoints(points);
 		Data author = SaveSystem.getUser(event.getAuthor().getId());
 		author.penalizePoints(Math.abs(points));
 		String s;
-		if(points>=0){
+		String c;
+		if(points>0){
 			s=FlavorManager.getRand("addPoint",event.getGuild());
+			c=getComboMsg(event.getGuild().getMemberById(id).getAsMention(),event.getGuild().getMemberById(id).getNickname(),event,user.getCombo());
 		}
 		else{
 			s=FlavorManager.getRand("deletePoint",event.getGuild());
+			c=FlavorManager.getRand("comboBreak",event.getGuild());
 		}
-		if(event.getMessage().getMentionedUsers().size()>0){
+		if(event.getMessage().getMentionedUsers().size()>0&&!event.getMessage().getMentionedUsers().get(0).getId().equals(event.getAuthor().getId())){
 			s=s.replace("%userMention%", event.getMessage().getMentionedUsers().get(0).getAsMention())
 					.replace("%userName%", event.getGuild().getMemberById(event.getMessage().getMentionedUsers().get(0).getId()).getNickname())
 					.replace("%point%", ""+points*user.getCombo());
@@ -104,10 +111,11 @@ public class Combo extends CommandGenerics implements Command {
 					.replace("%userName%", event.getGuild().getMemberById(lastNonAuthor(event.getAuthor().getId(),event.getChannel()).getId()).getNickname())
 					.replace("%point%", ""+points*user.getCombo());
 		}
-
 		Lib.sendMessage(event, s);
+		if(comboed&&user.getCombo()>1){
+			Lib.sendMessage(event, c);
+		}
 		SaveSystem.setUser(user);
-		SaveSystem.buildLeaderBoards();
 	}
 	public static User lastNonAuthor(String authID, MessageChannel channel){
 		List<Message> past=channel.getHistory().retrievePast(50).complete();

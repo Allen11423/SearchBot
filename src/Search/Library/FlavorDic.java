@@ -8,6 +8,7 @@ public enum FlavorDic {
 	pointadd("addPoint",PointGetData.values()),
 	pointcheck("checkPoint", PointCheckData.values()),
 	pointdelete("deletePoint",PointGetData.values()),
+	comboBreak("comboBreak",new String[]{"m-m-m-MOMBO BREAKER!!!"}),
 	C1("Combo1",ComboData.C1.options),
 	C2("Combo2",ComboData.C2.options),
 	C3("Combo3",ComboData.C3.options),

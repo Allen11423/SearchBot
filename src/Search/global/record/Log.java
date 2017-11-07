@@ -40,14 +40,10 @@ public class Log {
 	public static void save(){
 		try{
 			String existing="";
-			if(new File(Settings.saveSource).exists()){
-				BufferedReader in=new BufferedReader(new FileReader(new File(Settings.saveSource)));
-				while(in.ready()){
-					existing+=in.readLine()+"\n";
-				}
-				in.close();
+			if(!new File(Settings.saveSource).exists()){
+				new File(Settings.saveSource).createNewFile();
 			}
-			BufferedWriter out=new BufferedWriter(new FileWriter(new File(Settings.saveSource)));
+			BufferedWriter out=new BufferedWriter(new FileWriter(new File(Settings.saveSource),true));
 			lock.acquire();
 			out.write(existing);
 			for(String s:log){

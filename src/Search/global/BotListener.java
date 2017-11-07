@@ -8,6 +8,7 @@ import Search.global.record.SaveSystem;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
+import util.Lib;
 import Search.util.CmdControl;
 
 
@@ -28,11 +29,17 @@ public class BotListener extends ListenerAdapter{
 			}
 			//template for momCombo
 			String content=event.getMessage().getContent().toLowerCase();
-			if(content.contains("mom joke")
+			if((content.contains("mom joke")||content.contains("mj"))
 					&&content.contains("/")
 					&&Character.isDigit(content.substring(content.indexOf("/")+1).toCharArray()[0])
 					&&Character.isDigit(content.substring(0,content.indexOf("/")).toCharArray()[content.substring(0,content.indexOf("/")).toCharArray().length-1])){
 				Combo.comboed(event);
+			}
+			else if(content.contains("dad joke")
+					&&content.contains("/")
+					&&Character.isDigit(content.substring(content.indexOf("/")+1).toCharArray()[0])
+					&&Character.isDigit(content.substring(0,content.indexOf("/")).toCharArray()[content.substring(0,content.indexOf("/")).toCharArray().length-1])){
+				Lib.sendMessage(event, "nobody cares about dads");
 			}
 		}catch(Exception e){
 			Log.logError(e);

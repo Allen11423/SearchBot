@@ -14,8 +14,7 @@ public class Dailies extends CommandGenerics implements Command {
 	public void action(String[] args, MessageReceivedEvent event) {
 		Data user= SaveSystem.getUser(event.getAuthor().getId());
 		if(user.dailyReady()){
-			user.addPoints(10);
-			user.dailyUsed();
+			user.daily();
 			SaveSystem.setUser(user);
 			Lib.sendMessageFormated(event, "**%userName%** has gotten their daily 10 mom points x combo of "+user.getCombo());
 		}

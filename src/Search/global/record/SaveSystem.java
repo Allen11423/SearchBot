@@ -58,34 +58,15 @@ public class SaveSystem {
 			}
 		},Settings.dailyTime+86400000-System.currentTimeMillis(),86400000,TimeUnit.MILLISECONDS);
 		load();
-		buildLeaderBoards();
+		buildLeaderBoards();//initial build
 	}
 	public static void buildLeaderBoards(){
-		Settings.momLeaders.clear();
 		for(String s: Data.users.keySet()){
 			addToLeaderBoards(Data.users.get(s));//should automatically sort things, first in list is largest
 		}
 	}
 	private static void addToLeaderBoards(Data user){
-		int point = user.getPoints();
-		int size=Settings.momLeaders.size();
-		if(size==0){
-			Settings.momLeaders.add(user);
-			return;
-		}
-		if(point<=Settings.momLeaders.get(size-1).getPoints()){
-			return;
-		}
-		for(int i=0;i<size;i++){
-			if(Settings.momLeaders.get(i).getPoints()<=point){
-				Settings.momLeaders.add(i, user);
-				break;
-			}
-		}
-		//should only go over by 1 at max
-		if(Settings.momLeaders.size()>10){
-			Settings.momLeaders.remove(10);//remove last
-		}
+		Settings.momLeaders.addItem(user);
 	}
 	/**
 	 * Loads saved data from file
@@ -183,8 +164,18 @@ public class SaveSystem {
 	 * @param user user data to save locally
 	 */
 	public static void setUser(Data user){
+		if(!Data.users.containsKey(user.id)){
+			newUserAdded(user);
+		}
 		Data.users.put(user.id, user);
 		//pushUserData();
+	}
+	/**
+	 * A proc for when a new user is added to add them to various indexes;
+	 * @param user
+	 */
+	private static void newUserAdded(Data user){
+		Settings.momLeaders.addItem(user);
 	}
 	public static Settings getGuild(String id){
 		try{

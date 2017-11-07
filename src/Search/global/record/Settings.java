@@ -1,7 +1,6 @@
 package Search.global.record;
 
 import java.util.HashMap;
-import java.util.Vector;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -13,6 +12,7 @@ import XML.Elements;
 import global.Main;
 import Search.util.ModuleController;
 import Search.util.Reminder;
+import Search.util.tracking.Leaderboard;
 import Search.util.Lib;
 
 
@@ -37,7 +37,7 @@ public class Settings {
 	public static final ScheduledExecutorService executor = Executors.newScheduledThreadPool(5);//used for various threaded activities
 	public static final HashMap<String,Settings> guilds=new HashMap<String,Settings>();//map of guilds and settings stored locally for easy access
 	public static long dailyTime;
-	public static final Vector<Data> momLeaders=new Vector<Data>();
+	public static final Leaderboard momLeaders=new Leaderboard();
 	
 	public String guildPrefix="";
 	public String guildModPrefix="";
