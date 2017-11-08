@@ -116,6 +116,7 @@ public class SaveSystem {
 		int minute=cal.get(Calendar.MINUTE);
 		int second=cal.get(Calendar.SECOND);
 		int mili=cal.get(Calendar.MILLISECOND);
+		hour-=9;
 		if(hour<0){
 			hour+=24;
 		}

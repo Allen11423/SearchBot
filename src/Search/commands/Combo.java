@@ -2,78 +2,39 @@ package Search.commands;
 
 import java.util.List;
 
-import Search.Library.FlavorManager;
+import Search.commands.sub.JokeProcess;
 import Search.global.record.Data;
 import Search.global.record.SaveSystem;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
-import util.Lib;
+import Search.util.Lib;
 
 public class Combo extends CommandGenerics implements Command {
 
 	@Override
 	public void action(String[] args, MessageReceivedEvent event) {
 		Data user=null;
+		Data author = SaveSystem.getUser(event.getAuthor().getId());
 		if(args.length<=0){//if no arguments send combo value for user
-			sendComboMsg(event.getAuthor().getAsMention(),event.getAuthor().getName(),event,SaveSystem.getUser(event.getAuthor().getId()).getCombo());
-			return;
+			user=author;
 		}
-		//stuff to get user/send message/add combo
-		if(event.getMessage().getMentionedUsers().size()>0){
+		else if(event.getMessage().getMentionedUsers().size()>0){
 			if(event.getMessage().getMentionedUsers().get(0).getId().equals(event.getAuthor().getId())){//mentions self
-				return;
+				user=author;
 			}
 			user=SaveSystem.getUser(event.getMessage().getMentionedUsers().get(0).getId());
 		}
 		else if(args.length>0&&Lib.isNumber(args[0])){
 			if(args[0].equals(event.getAuthor().getId())){//mentions self return
-				return;
+				user=author;
 			}
 			user=SaveSystem.getUser(args[0]);
 		}
-		if(!(user==null)){
-			user.comboAdded();
-			SaveSystem.setUser(user);
-		}
-		if(event.getMessage().getMentionedUsers().size()>0){
-			sendComboMsg(event.getMessage().getMentionedUsers().get(0).getAsMention(),event.getMessage().getMentionedUsers().get(0).getName(),event,user.getCombo());
-		}
-		else if(args.length>0&&Lib.isNumber(args[0])){
-			sendComboMsg(event.getGuild().getMemberById(args[0]).getAsMention(),event.getGuild().getMemberById(args[0]).getNickname(),event,user.getCombo());
-		}
+		String message=JokeProcess.processCombo(user, author, event.getGuild());
+		Lib.sendMessage(event, message);
 
-	}
-	public static String getComboMsg(String userMention,String userName,MessageReceivedEvent event, int combo){
-		String s="";
-		switch(combo){
-		case 1:
-			s=FlavorManager.getRand("Combo1", event.getGuild());
-			break;
-		case 2:
-			s=FlavorManager.getRand("Combo2", event.getGuild());
-			break;
-		case 3:
-			s=FlavorManager.getRand("Combo3", event.getGuild());
-			break;
-		case 4:
-			s=FlavorManager.getRand("Combo4", event.getGuild());
-			break;
-		case 5:
-			s=FlavorManager.getRand("Combo5", event.getGuild());
-			break;
-		default:
-			s="Combo out of range";//default case to avoid errors
-			break;
-		}
-		//generic replace username/mention
-		s=s.replace("%userMention%", userMention)
-				.replace("%userName%", userName);
-		return s;
-	}
-	public static void sendComboMsg(String userMention,String userName,MessageReceivedEvent event, int combo){
-		Lib.sendMessage(event, getComboMsg(userMention,userName,event,combo));
 	}
 	public static void comboed(MessageReceivedEvent event){
 		String id;
@@ -88,34 +49,9 @@ public class Combo extends CommandGenerics implements Command {
 		}
 		Data user=SaveSystem.getUser(id);
 		int points=ExtractFirstNum(event.getMessage().getContent());
-		boolean comboed=user.addPoints(points);
 		Data author = SaveSystem.getUser(event.getAuthor().getId());
-		author.penalizePoints(Math.abs(points));
-		String s;
-		String c;
-		if(points>0){
-			s=FlavorManager.getRand("addPoint",event.getGuild());
-			c=getComboMsg(event.getGuild().getMemberById(id).getAsMention(),event.getGuild().getMemberById(id).getNickname(),event,user.getCombo());
-		}
-		else{
-			s=FlavorManager.getRand("deletePoint",event.getGuild());
-			c=FlavorManager.getRand("comboBreak",event.getGuild());
-		}
-		if(event.getMessage().getMentionedUsers().size()>0&&!event.getMessage().getMentionedUsers().get(0).getId().equals(event.getAuthor().getId())){
-			s=s.replace("%userMention%", event.getMessage().getMentionedUsers().get(0).getAsMention())
-					.replace("%userName%", event.getGuild().getMemberById(event.getMessage().getMentionedUsers().get(0).getId()).getNickname())
-					.replace("%point%", ""+points*user.getCombo());
-		}
-		else{
-			s=s.replace("%userMention%", lastNonAuthor(event.getAuthor().getId(),event.getChannel()).getAsMention())
-					.replace("%userName%", event.getGuild().getMemberById(lastNonAuthor(event.getAuthor().getId(),event.getChannel()).getId()).getNickname())
-					.replace("%point%", ""+points*user.getCombo());
-		}
-		Lib.sendMessage(event, s);
-		if(comboed&&user.getCombo()>1){
-			Lib.sendMessage(event, c);
-		}
-		SaveSystem.setUser(user);
+		String message=JokeProcess.processComboed(user, points, event.getGuild(), author);
+		Lib.sendMessage(event, message);
 	}
 	public static User lastNonAuthor(String authID, MessageChannel channel){
 		List<Message> past=channel.getHistory().retrievePast(50).complete();

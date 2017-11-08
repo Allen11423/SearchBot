@@ -43,23 +43,25 @@ public class Data implements PointableItem{
 			return true;
 		}
 	}
+	//resets everything
 	public Data resetPoints(){
 		momPoints=100;
 		momPointsDaily=0;
 		momCombo=1;
 		lastDaily=0;
 		lastDataCheck=0;
+		pointStreak=0;
 		return this;
 	}
 	public void daily(){
-		dataCheck();
 		lastDaily=System.currentTimeMillis();
-		momPoints += 10*momCombo;
+		addPoints(10);//more secure way of adding points
 	}
 	private void dataCheck(){
 		if(lastDataCheck<Settings.dailyTime){
 			momCombo=1;
 			momPointsDaily=0;
+			pointStreak=0;
 		}
 		lastDataCheck=System.currentTimeMillis();
 	}
@@ -77,38 +79,33 @@ public class Data implements PointableItem{
 		momCombo++;
 		return true;
 	}
+	public void setCombo(int combo){
+		this.momCombo=combo;
+		if(momCombo>5){
+			momCombo=5;
+		}
+	}
+	public int getStreak(){
+		return pointStreak;
+	}
+	public void setStreak(int streak){
+		pointStreak=streak;
+	}
 	/**
 	 * 
 	 * @param points
 	 * @return if combo has increased
 	 */
-	public boolean addPoints(int points){
+	public void addPoints(int points){
 		dataCheck();
-		boolean comboed=false;
-		pointStreak++;
-		if(pointStreak==2){
-			comboed=comboAdded();
-			pointStreak=0;
-		}
-		if(points<0){
-			comboed=true;
-			momCombo=1;
-			pointStreak=0;
-		}
 		momPoints+=points*momCombo;
 		momPointsDaily+=points*momCombo;
-		return comboed;
-	}
-	public void penalizePoints(int points){
-		dataCheck();
-		pointStreak=0;
-		momPoints-=points;
-		momPointsDaily-=points;
 	}
 	public int getDailyPoints(){
-//		dataCheck();
+		dataCheck();
 		return momPointsDaily;
 	}
+	//overrides for leaderborads
 	public String getIdentifier(){
 		return id;
 	}
