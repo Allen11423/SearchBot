@@ -1,6 +1,7 @@
 package Search.global;
 
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
@@ -12,6 +13,7 @@ import Search.global.record.Settings;
 import Search.global.record.SaveSystem;
 import Search.global.record.Secrets;
 import Search.Library.FlavorManager;
+import Search.Library.avatar.AvatarEnum;
 import Search.commands.*;
 import Search.commands.mod.*;
 import Search.commands.override.*;
@@ -21,8 +23,10 @@ import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.entities.Game;
+import net.dv8tion.jda.core.entities.Icon;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
+import util.rng.RandomLibs;
 import Search.util.CmdControl;
 import Search.googleutil.drive.DataEnum;
 import Search.googleutil.drive.DriveFile;
@@ -51,7 +55,6 @@ public class Main {
 			if(Settings.token.contentEquals(Secrets.token)){
 				global.Main.main(null);
 			}
-			
 		}catch(Exception e){
 			Log.logError(e);
 			Log.save();
@@ -68,7 +71,7 @@ public class Main {
 			Log.logError(e);
 		}
 		jda.setAutoReconnect(true);
-		jda.getPresence().setGame(Game.of(".serach|.image"));
+		jda.getPresence().setGame(Game.of(" your mom"));
 	}
 	public static void shutdown(){
 		//jda.shutdown(false);
@@ -125,10 +128,26 @@ public class Main {
 		DriveManager.setup();
 		Log.setup();
 		SaveSystem.setup();
-		jda.getPresence().setGame(Game.of(".serach|.image"));
+		jda.getPresence().setGame(Game.of(" your mom"));
+		if(Settings.token.equals(Secrets.token)){
+			try{
+				jda.getSelfUser().getManager().setAvatar(randomAvatar()).complete();
+			}catch(Exception e){
+				Log.log("ERROR", "avatar changed too fast "+e.getMessage());
+			}
+		}
 	}
 	public static void log(String type,String msg){
 		Log.log(type, msg);
+	}
+	public static Icon randomAvatar(){
+		try {
+			return Icon.from(overrides.getClass().getResourceAsStream("/Search/Library/avatar/"+RandomLibs.SelectRandom(AvatarEnum.values())));
+
+		} catch (IOException e) {
+		}
+		return null;
+		
 	}
 	public static boolean handleOverride(ArgContainer args,MessageReceivedEvent event){
 		if(overrides.containsKey(args.command)){

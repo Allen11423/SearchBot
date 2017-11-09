@@ -86,6 +86,7 @@ public class Data implements PointableItem{
 		}
 	}
 	public int getStreak(){
+		dataCheck();
 		return pointStreak;
 	}
 	public void setStreak(int streak){
